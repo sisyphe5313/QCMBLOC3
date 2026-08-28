@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#6f8f57">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="QCM Bloc 3">
+<title>QCM Bloc 3 — Délégué Pharmaceutique</title>
+<style>
+  :root{
+    --bg:#f3efe4; --card:#fffdf6; --primary:#6f8f57; --primary-d:#5a7747;
+    --ok:#4f8a3d; --ok-bg:#e8f0d9; --ko:#bf6a57; --ko-bg:#f5e8e1;
+    --txt:#3a3a2e; --muted:#8c8c7a; --line:#e6e1d2; --accent:#d98a54;
+    --shadow:0 2px 10px rgba(90,105,55,.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.5;
+    padding-bottom:env(safe-area-inset-bottom)}
+  .wrap{max-width:820px;margin:0 auto;padding:16px}
+  header.app{background:linear-gradient(135deg,var(--primary),#93b277);color:#fff;
+    padding:18px 16px;position:sticky;top:0;z-index:20;box-shadow:var(--shadow);padding-top:calc(18px + env(safe-area-inset-top))}
+  header.app .wrap{padding:0 16px;display:flex;align-items:center;gap:12px}
+  header.app h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px}
+  header.app .sub{font-size:12px;opacity:.9;margin-top:2px}
+  .home-btn{background:rgba(255,255,255,.18);border:0;color:#fff;font-size:20px;
+    width:40px;height:40px;border-radius:10px;cursor:pointer;display:none;align-items:center;justify-content:center;flex:0 0 auto}
+  .home-btn.show{display:flex}
+  h2.section{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
+    margin:22px 4px 10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .theme{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;
+    cursor:pointer;transition:.15s;box-shadow:var(--shadow);text-align:left}
+  .theme:active{transform:scale(.98)}
+  .theme:hover{border-color:var(--primary)}
+  .theme .ico{font-size:26px}
+  .theme .nm{font-weight:600;font-size:14.5px;margin-top:8px}
+  .theme .ct{font-size:12px;color:var(--muted);margin-top:3px}
+  .theme .bar{height:5px;background:var(--line);border-radius:4px;margin-top:9px;overflow:hidden}
+  .theme .bar > i{display:block;height:100%;background:var(--ok);width:0}
+  .big-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+  .card-action{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+    cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;transition:.15s;text-align:left}
+  .card-action:active{transform:scale(.98)}
+  .card-action .ico{font-size:26px;flex:0 0 auto}
+  .card-action b{display:block;font-size:15px}
+  .card-action span{font-size:12px;color:var(--muted)}
+  .card-action.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .card-action.primary span{color:rgba(255,255,255,.85)}
+  .card-action.warn{background:#f7f0e0;border-color:#f0c987}
+  .card-action.warn .badge{margin-left:auto;background:var(--accent);color:#fff;font-weight:800;font-size:13px;border-radius:20px;padding:2px 10px;flex:0 0 auto}
+  .card-action.disabled{opacity:.55;cursor:default}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .panel h3{margin:0 0 4px;font-size:18px}
+  .panel .desc{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .flabel{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:4px 2px 8px}
+  .lenrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:8px 16px;
+    cursor:pointer;font-size:14px;font-weight:600;color:var(--muted)}
+  .chip.on{border-color:var(--primary);color:var(--primary);background:#eaf0dd}
+  .moderow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .modecard{border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:#fff}
+  .modecard.on{border-color:var(--primary);background:#eaf0dd}
+  .modecard .mt{font-weight:700;font-size:14.5px}
+  .modecard .md{font-size:12px;color:var(--muted);margin-top:3px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;
+    padding:14px 20px;font-size:15.5px;font-weight:700;cursor:pointer;width:100%;transition:.15s}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.primary:active{background:var(--primary-d)}
+  .btn.ghost{background:#f3efe4;color:var(--txt)}
+  .btn.ok{background:var(--ok);color:#fff}
+  .btn.warnb{background:var(--accent);color:#fff}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .quiztop{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .progress{flex:1;height:8px;background:#e6e1d2;border-radius:6px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:var(--accent);width:0;transition:.3s}
+  .qcount{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+  /* Timer */
+  .timer{display:flex;align-items:center;gap:7px;font-weight:800;font-size:15px;color:var(--primary);
+    background:#eaf0dd;border-radius:20px;padding:4px 12px;white-space:nowrap}
+  .timer.warn{color:#b9791a;background:#f6ead2}
+  .timer.danger{color:#fff;background:var(--ko);animation:pulse .8s infinite}
+  @keyframes pulse{50%{opacity:.6}}
+  .timerbar{height:5px;background:#e6e1d2;border-radius:4px;overflow:hidden;margin:4px 0 2px}
+  .timerbar > i{display:block;height:100%;background:var(--primary);width:100%;transition:width 1s linear}
+  .timerbar > i.warn{background:var(--accent)}
+  .timerbar > i.danger{background:var(--ko)}
+  .qtheme{font-size:12px;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:8px 2px 0}
+  .qtype{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;letter-spacing:.3px}
+  .qtype.qcm{background:#eaf0dd;color:var(--primary)}
+  .qtype.qroc{background:#f6ead2;color:#b9791a}
+  .qtext{font-size:18.5px;font-weight:600;margin:8px 2px 4px;line-height:1.4}
+  .hint{font-size:12.5px;color:var(--muted);margin:2px 2px 14px}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .opt{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--line);
+    border-radius:12px;padding:13px 14px;cursor:pointer;transition:.12s;box-shadow:var(--shadow)}
+  .opt:active{transform:scale(.99)}
+  .opt .box{width:24px;height:24px;border-radius:7px;border:2px solid #c8ccb5;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:800}
+  .opt.sel{border-color:var(--primary);background:#eaf0dd}
+  .opt.sel .box{background:var(--primary);border-color:var(--primary)}
+  .opt .lbl{font-size:15px}
+  .opt .key{font-weight:700;color:var(--muted);margin-right:2px}
+  .opt.disabled{cursor:default}
+  .opt.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .opt.correct .box{background:var(--ok);border-color:var(--ok)}
+  .opt.wrong{border-color:var(--ko);background:var(--ko-bg)}
+  .opt.wrong .box{background:var(--ko);border-color:var(--ko)}
+  .opt .tag{margin-left:auto;font-size:11px;font-weight:800;padding:2px 8px;border-radius:8px}
+  .opt.correct .tag{background:var(--ok);color:#fff}
+  .opt.wrong .tag{background:var(--ko);color:#fff}
+  textarea.qroc{width:100%;min-height:90px;border:1.5px solid var(--line);border-radius:12px;
+    padding:12px;font-size:15px;font-family:inherit;resize:vertical;background:#fff}
+  textarea.qroc:focus{outline:none;border-color:var(--primary)}
+  .feedback{border-radius:14px;padding:15px 16px;margin-top:16px;border:1.5px solid;animation:pop .2s}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .feedback.good{background:var(--ok-bg);border-color:var(--ok)}
+  .feedback.bad{background:var(--ko-bg);border-color:var(--ko)}
+  .feedback.neutral{background:#eef1e3;border-color:var(--primary)}
+  .feedback .ftitle{font-weight:800;font-size:15.5px;display:flex;align-items:center;gap:8px}
+  .feedback.good .ftitle{color:var(--ok)}
+  .feedback.bad .ftitle{color:var(--ko)}
+  .feedback.neutral .ftitle{color:var(--primary-d)}
+  .feedback .ans{margin-top:10px;font-size:14.5px}
+  .feedback .ans b{color:var(--txt)}
+  .feedback .exp{margin-top:10px;font-size:14px;color:#575a49;background:rgba(255,255,255,.6);
+    border-radius:10px;padding:10px 12px}
+  .selfassess{display:flex;gap:10px;margin-top:14px}
+  .selfassess .btn{width:auto;flex:1;padding:12px}
+  .footer-bar{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,transparent);
+    padding:14px 0 calc(14px + env(safe-area-inset-bottom));margin-top:18px}
+  .scorebox{text-align:center;padding:10px 0 4px}
+  .scorecircle{width:130px;height:130px;border-radius:50%;margin:8px auto 12px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:800;box-shadow:var(--shadow)}
+  .scorecircle .pct{font-size:34px;line-height:1}
+  .scorecircle .frac{font-size:13px;opacity:.9;margin-top:4px;font-weight:600}
+  .review{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .rev-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-size:14px;box-shadow:var(--shadow)}
+  .rev-head{display:flex;gap:10px;align-items:flex-start}
+  .rev-item .mk{font-size:17px;flex:0 0 auto;line-height:1.3}
+  .rev-item .qx{color:var(--muted);font-size:12px;margin-top:2px}
+  .rev-corr{margin-top:9px;font-size:13.5px;background:#f2f0e5;border-radius:9px;padding:9px 11px;color:#575a49}
+  .rev-corr b{color:var(--txt)}
+  .rev-self{display:flex;gap:8px;margin-top:9px}
+  .rev-self button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px;
+    font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
+  .rev-self button.pk-ok{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+  .rev-self button.pk-ko{border-color:var(--ko);color:var(--ko);background:var(--ko-bg)}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 8px;
+    text-align:center;box-shadow:var(--shadow)}
+  .stat .v{font-size:23px;font-weight:800;color:var(--primary)}
+  .stat .v.ok{color:var(--ok)} .stat .v.ko{color:var(--ko)}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+  .theme-stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    margin-bottom:9px;box-shadow:var(--shadow)}
+  .theme-stat .top{display:flex;justify-content:space-between;align-items:center;font-size:14.5px;font-weight:600}
+  .theme-stat .pct{font-weight:800}
+  .theme-stat .bar{height:8px;background:var(--line);border-radius:5px;margin-top:8px;overflow:hidden}
+  .theme-stat .bar > i{display:block;height:100%;border-radius:5px}
+  .theme-stat .meta{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .revlist{display:flex;flex-direction:column;gap:7px}
+  .revq{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--ko);border-radius:10px;
+    padding:10px 12px;font-size:13.5px;box-shadow:var(--shadow)}
+  .revq .rt{font-size:11px;color:var(--muted);margin-top:3px}
+  .empty{text-align:center;color:var(--muted);padding:30px 16px;font-size:14.5px}
+  .reset{background:none;border:1px solid var(--ko);color:var(--ko);border-radius:10px;padding:9px 14px;
+    font-size:13px;font-weight:600;cursor:pointer;margin-top:14px}
+  .hidden{display:none!important}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#3a3a2e;color:#fff;
+    padding:11px 18px;border-radius:24px;font-size:13.5px;z-index:60;opacity:0;transition:.25s;pointer-events:none;box-shadow:var(--shadow)}
+  .toast.show{opacity:1}
+  .installbtn{background:rgba(255,255,255,.2);border:0;color:#fff;font-size:12px;font-weight:700;
+    border-radius:20px;padding:6px 12px;cursor:pointer;margin-left:auto;display:none}
+  .installbtn.show{display:inline-block}
+  @media(max-width:520px){ .qtext{font-size:17px} }
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="wrap">
+    <button class="home-btn" id="homeBtn" onclick="goHome()">&#8592;</button>
+    <div>
+      <h1>QCM Bloc 3</h1>
+      <div class="sub" id="subtitle">Délégué Pharmaceutique &middot; Bloc 3</div>
+    </div>
+    <button class="installbtn" id="installBtn" onclick="doInstall()">&#11015; Installer</button>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script src="qcm-bloc3-data.js"></script>
+<script>
+/* ============ Icônes intégrées (pour PWA installable) ============ */
+const ICON192="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAACuUlEQVR42u3cwQmEQBQFwcnSMAzFOL0LHhVTkFVku4RO4M2vq2N87JuX6dD/NnyOXWEUHlw5DB5WSQweUUkIHk1ZCB5KSQQeR1kIHkRZBB5CSQTGVxaCwZVFYGhlERhYWQSGVRqBUZUFYFBlERhSWQQGVBqB8ZQFYDhlERhMaQTGUhaAoZRGYCRlARhIaQTGEQBSEYBhlEZgFAEgFQEYRGkExhAAEgASAFIHgCGURmAEAaCftW/ro9kYAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQAAAIAAAEAAAAGAEAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALxzSHo3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAASAH2P5MZYAAEAAACAAABAAAAgAAAQAAAIAAACMAAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAACAAABAAEgDSXQDXZwhljx8AAWAMASABIPUAQKD08QMgAIyiMgAIlD5+AASAcVQGAIHSxw+A8gAgUPr4AVAeAARKHz8Eyh8/AMoDgEDp44dA+eOHQPnjB0B5ABAoffwQKH/8ECh//BAof/wgKH/4EMjxQyDHD4IcPgRy/CDI4YMghw+DHD0McvRQ6MvHfgLFD65Dq2e1eAAAAABJRU5ErkJggg==";
+const ICON512="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAALpUlEQVR42u3WwQ3CQBAEQWdJGIRCnP4j8QScAb87tmulSuCMmD4Ot+XdH7c3wAT+0Z0z8AACwRl7AESBM/gACAJn8AEQBM7oAyAGnNEHQAw4ow+AGHCGHwAh4Iw+AGLAGX4AIeAMPwBCwBl+AISAM/wACAFn+AEQAs74AyACnOEHQAg4ww+AEHDGHwAR4Aw/AELAGX8ARIAz/AAIAWf8ARABxt+PDQARYPwBQAQYfgAQAsYfAESA8QcAEWD8AUAEGH8AEAHGHwBEgPEHABFg+AFACBh/ABABAgAABIDxBwARYPwBIBgBPjgAxCLAhwaAWAT4wAAQiwAfFgBiEeCDAkAwAnxMAIgFgA8JALEI8AEBIBYBPhwAxCLABwOAYAT4WAAQCwAfCgBiEeADAUAwAnwcAIgFgA8DALEI8EEAIBgBPgYAxALAhwCAYAT4CAAQCwAfAABiEeDhASAYAR4dAGIB4MEBIBgBHhsAYgHgoQEgGAEeGQBiAeCBASAYAR4XAGIB4GEBIBgBHhUAYgHgQQEgGAEeEwAEAAAwPQA8JAAEI8AjAkAsADwgAAQjwOMBgAAAAKYHgIcDgGAEeDQAEAAAwPQA8GAAEIwAjwUAAgAAmB4AHgoAghHgkQBAAAAAAgAAGBcAHggAghHgcQBAAAAAAgAAGBcAHgYAghHgUQBAAAAAAgAAEAAAwP8HgAcBgGAEeAwAEAAAgAAAAAQAACAAAAABAAAIAABgywDwELDG63ny5bcAiyLAI4AAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEAAgAIy/AAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAxl8AgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAEAAAAJAAIAAAASAAAABAAgAAQACABAAAgAEACAABAAIAEAACAAQAIAAEAAgAAABIABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAQAAIAL8FEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACAASAhwABIABAAAACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIABAAOC3AAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAIAA8AggAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQACADjLwBAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgPEXACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAIwDgMgTAAgAAAEgABAAAAJAACAAAASAAEAAAAgAAYAAABAAAgABACAABAACABAACAAEACAAEAAIAEAAIAAQAIAAQAAIAAABgAAQAAACAAEgAAAEAAJAAAAIAASAAAAQAAgAAQAgABAAAgBAAAgABACAABAACAAAASAAEAAAAkAAIAAABIAAQAAACAABgAAAEAACAAEACAAEAAIAEAAIAAQAIAAQAAgAQAAgAAQAgABAAAgAAAGAABAAAAIAASAAAAQAAkAAAAgABIAAABAACAABACAABICHEAAAAkAAIAAABIAAQAAACAABgAAAEAACAAEAIAAEAAIAQAAIAAQAIAD8pwsABAAgABAACABAACAAEACAAEAACAAAAYAAEAAAAgABIAAABAACQAAACAAEgAAAEAAIAAEAIAAQAAIAQAAIAI8gAAAEgABAAAAIAAGAAAAQAAIAAQAgAAQAAgBAAAgABACAABAACAAAASAAEACAAEAAIAAAAYAAQAAAAgABgD8NQAAgAAQAgABAAAgAAAGAABAAAAIAAQAizzgAAgAEgAAABAAIAAEACAAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAMP4CAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQACABAAAgAEACAABAAIAEAACAAQAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAJAAPgtgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQACAAPAQIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEAAgC/BRAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAEgEcAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAQAAYfwEAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAIy/AAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEAPBjAFznIQAgNv4CAAAEAAAgAAAAAQAACAAAQAAAAAIAANg6AEQAAATHXwAAgAAAAAQAACAAAIA5ASACACA4/gIAAAQAACAAAICxASACACA4/gIAAAQAACAAAICxASACACA4/gIAAAQAAFAJABEAAMHxFwAAIAAAgEoAiAAACI6/AAAAAQAAVAJABABAcPwFAABEA0AEAEBw/AUAAAgAAKASACIAAILjLwAAIBoAIgAAguMvAAAgGgAiAACC4y8AACAaACIAAILjLwAAIBoAIgAAguMvAAAgGgAiAACC4y8CACA6/gIAAKIBIAIAIDj+AgAAogEgAgAgOP4iAACi4y8AACAaACIAAILjLwIAIDr+AgAAogEgAgAgOP4iAACi4y8CACA6/iIAAKLjLwAAIBoAIgAAguMvAgAgOv4iAACi4y8CACA6/iIAAKLjLwIAIDr+IgAA4y8AAEAAiAAAMP5CAAAMvwgAAOMvAgDA+IsAADD+IgAAjL8IAADjLwIAwPgLAQAw/CIAAIy/CAAA4y8CAMD4CwEADL8TAQAYfycEADD8TgQAYPydEADA8DshAIDhdyIAAOPvhAAAht8JAQAMvxMCABh+JwQAMPxOCAAYfufEAIDRd04IABh+58QAgNF3TgwAGH3nxACA0XdOEAAYfOcEAYDBd04UABh75wQCYODd6vsAoqS7NH6Dg+4AAAAASUVORK5CYII=";
+
+/* ============ État & stockage ============ */
+const LS_STATS = "qcm_bloc3_stats_v1";
+const LS_SESS  = "qcm_bloc3_sessions_v1";
+const EXAM_SECONDS = 30;
+function loadJSON(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v))}
+let stats = loadJSON(LS_STATS,{});
+let sessions = loadJSON(LS_SESS,[]);
+
+const app = document.getElementById('app');
+const homeBtn = document.getElementById('homeBtn');
+const subtitle = document.getElementById('subtitle');
+
+let session = null;   // {list, pos, answers, scope, mode, tStart}
+let timer = {id:null, remaining:0, qStart:0};
+
+/* ============ Utilitaires ============ */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function nl2br(s){return s.replace(/\n/g,'<br>')}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1700)}
+function totalQuestions(){return QCM_DATA.themes.reduce((n,t)=>n+t.questions.length,0)}
+function themeById(id){return QCM_DATA.themes.find(t=>t.id===id)}
+function qStat(tid,idx){return (stats[tid]||{})[idx]||null}
+function errorPool(){
+  let p=[];
+  QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>{
+    const s=qStat(t.id,i); if(s&&s.seen&&s.lastCorrect===false)p.push({tid:t.id,idx:i,q});
+  }));
+  return p;
+}
+function masteredCount(){
+  let m=0; QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>{const s=qStat(t.id,i);if(s&&s.seen&&s.lastCorrect)m++;}));
+  return m;
+}
+function recordAnswer(tid,idx,isCorrect){
+  if(!stats[tid])stats[tid]={};
+  const cur=stats[tid][idx]||{seen:0,correct:0};
+  cur.seen=(cur.seen||0)+1;
+  if(isCorrect)cur.correct=(cur.correct||0)+1;
+  cur.lastCorrect=isCorrect;
+  stats[tid][idx]=cur; saveJSON(LS_STATS,stats);
+}
+function themeStats(tid){
+  const t=themeById(tid); let seen=0,correct=0;
+  Object.values(stats[tid]||{}).forEach(o=>{if(o.seen){seen++;if(o.lastCorrect)correct++}});
+  return {answered:seen,correct,total:t.questions.length};
+}
+
+/* ============ Accueil ============ */
+function goHome(){
+  stopTimer(); session=null;
+  homeBtn.classList.remove('show');
+  subtitle.textContent="Délégué Pharmaceutique · Bloc 3";
+  window.scrollTo(0,0);
+  const errN=errorPool().length;
+  const g = QCM_DATA.themes.map(t=>{
+    const st=themeStats(t.id);
+    const pct=st.total?Math.round(st.answered/st.total*100):0;
+    return `<button class="theme" onclick="openConfig('${t.id}')">
+      <div class="ico">${t.icon}</div><div class="nm">${t.name}</div>
+      <div class="ct">${t.questions.length} questions${st.answered?` · ${Math.round(st.correct/Math.max(st.answered,1)*100)}%`:''}</div>
+      <div class="bar"><i style="width:${pct}%"></i></div></button>`;
+  }).join('');
+  app.innerHTML = `
+    <div class="big-actions">
+      <div class="card-action primary" onclick="openConfig('ALL')">
+        <div class="ico">&#127775;</div><div><b>Toutes les questions</b><span>Les ${totalQuestions()} questions mélangées</span></div>
+      </div>
+      <div class="card-action warn ${errN?'':'disabled'}" onclick="${errN?"openConfig('ERRORS')":"toast('Aucune erreur à revoir pour l\\'instant')"}">
+        <div class="ico">&#128260;</div><div><b>Mes erreurs</b><span>Rejouer mes questions ratées</span></div>${errN?`<div class="badge">${errN}</div>`:''}
+      </div>
+      <div class="card-action" onclick="showAnalyse()">
+        <div class="ico">&#128202;</div><div><b>Mon analyse</b><span>Progrès & statistiques</span></div>
+      </div>
+    </div>
+    <h2 class="section">Choisir un thème</h2>
+    <div class="grid">${g}</div>
+    <p class="hint" style="text-align:center;margin-top:22px">
+      ${QCM_DATA.themes.length} thèmes &middot; ${totalQuestions()} questions au total<br>
+      Ordre aléatoire à chaque session &middot; Progression enregistrée sur cet appareil</p>`;
+}
+
+/* ============ Configuration ============ */
+let cfg={scope:'ALL', len:'20', mode:'learn'};
+function scopeName(scope){
+  if(scope==='ALL')return 'Toutes les questions';
+  if(scope==='ERRORS')return 'Mes erreurs';
+  return themeById(scope).name;
+}
+function openConfig(scope){
+  stopTimer();
+  cfg.scope=scope; cfg.mode='learn';
+  homeBtn.classList.add('show');
+  let max;
+  if(scope==='ALL')max=totalQuestions();
+  else if(scope==='ERRORS')max=errorPool().length;
+  else max=themeById(scope).questions.length;
+  subtitle.textContent=scopeName(scope);
+  window.scrollTo(0,0);
+  const title = scope==='ALL'?'&#127775; Toutes les questions'
+    : scope==='ERRORS'?'&#128260; Mes erreurs'
+    : themeById(scope).icon+' '+themeById(scope).name;
+  let lens=[10,20,30].filter(n=>n<max); lens.push(max);
+  cfg.len=String(Math.min(20,max));
+  app.innerHTML=`
+    <div class="panel">
+      <h3>${title}</h3>
+      <div class="desc">${scope==='ERRORS'?`${max} question(s) à revoir. `:''}Session en ordre aléatoire.</div>
+      <div class="flabel">Mode</div>
+      <div class="moderow" id="moderow">
+        <div class="modecard on" data-mode="learn" onclick="pickMode('learn')">
+          <div class="mt">&#128218; Apprentissage</div><div class="md">Correction et explication après chaque question. Sans limite de temps.</div>
+        </div>
+        <div class="modecard" data-mode="exam" onclick="pickMode('exam')">
+          <div class="mt">&#9201;&#65039; Examen chrono</div><div class="md">${EXAM_SECONDS}s par question, minuteur affiché. Correction à la fin.</div>
+        </div>
+      </div>
+      <div class="flabel">Nombre de questions</div>
+      <div class="lenrow" id="lenrow">
+        ${lens.map(n=>`<button class="chip ${String(n)===cfg.len?'on':''}" data-len="${n}" onclick="pickLen(${n})">${n===max?'Toutes ('+n+')':n}</button>`).join('')}
+      </div>
+      <button class="btn primary" onclick="startSession()">Commencer &#9654;</button>
+    </div>`;
+}
+function pickLen(n){cfg.len=String(n);document.querySelectorAll('#lenrow .chip').forEach(c=>c.classList.toggle('on',c.dataset.len===cfg.len))}
+function pickMode(m){cfg.mode=m;document.querySelectorAll('#moderow .modecard').forEach(c=>c.classList.toggle('on',c.dataset.mode===m))}
+
+function buildPool(){
+  if(cfg.scope==='ALL'){let p=[];QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>p.push({tid:t.id,idx:i,q})));return p;}
+  if(cfg.scope==='ERRORS')return errorPool();
+  return themeById(cfg.scope).questions.map((q,i)=>({tid:cfg.scope,idx:i,q}));
+}
+function startSession(){
+  const pool=shuffle(buildPool());
+  const len=parseInt(cfg.len,10);
+  session={list:pool.slice(0,len), pos:0, answers:[], scope:cfg.scope, mode:cfg.mode, tStart:Date.now(), timeSpent:0};
+  renderQuestion();
+}
+
+/* ============ Minuteur (mode examen) ============ */
+function stopTimer(){if(timer.id){clearInterval(timer.id);timer.id=null;}}
+function startTimer(){
+  stopTimer();
+  timer.remaining=EXAM_SECONDS; timer.qStart=Date.now();
+  updateTimerUI();
+  timer.id=setInterval(()=>{
+    timer.remaining--;
+    updateTimerUI();
+    if(timer.remaining<=0){stopTimer();autoAdvance();}
+  },1000);
+}
+function updateTimerUI(){
+  const el=document.getElementById('timer'), bar=document.getElementById('timerbarfill');
+  if(!el)return;
+  el.textContent='⏱️ '+timer.remaining+'s';
+  const r=timer.remaining;
+  el.className='timer'+(r<=5?' danger':r<=10?' warn':'');
+  if(bar){bar.style.width=(r/EXAM_SECONDS*100)+'%';bar.className=(r<=5?'danger':r<=10?'warn':'');}
+}
+function autoAdvance(){
+  const it=session.list[session.pos], q=it.q;
+  if(q.type==='qcm'){
+    const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+    lockExamQCM(it,sel);
+  } else {
+    const txt=(document.getElementById('qrocInput')||{}).value||'';
+    session.answers.push({item:it,isCorrect:null,userText:txt});
+  }
+  goNextExam();
+}
+
+/* ============ Affichage question ============ */
+function renderQuestion(){
+  stopTimer();
+  window.scrollTo(0,0);
+  homeBtn.classList.add('show');
+  const {list,pos,mode}=session;
+  const it=list[pos], q=it.q, theme=themeById(it.tid);
+  const prog=Math.round(pos/list.length*100);
+  const exam = mode==='exam';
+  let body = q.type==='qcm'
+    ? `<div class="opts" id="opts">`+q.options.map(o=>`
+        <div class="opt" data-k="${o.k}" onclick="toggleOpt(this)"><div class="box"></div>
+        <div class="lbl"><span class="key">${o.k})</span> ${nl2br(esc(o.t))}</div></div>`).join('')+`</div>`
+    : `<textarea class="qroc" id="qrocInput" placeholder="Écris ta réponse ici (facultatif)..."></textarea>`;
+  const timerHTML = exam
+    ? `<div class="timer" id="timer">⏱️ ${EXAM_SECONDS}s</div>`
+    : '';
+  const timerBar = exam ? `<div class="timerbar"><i id="timerbarfill"></i></div>` : '';
+  let footerBtn;
+  if(exam){
+    footerBtn = q.type==='qcm'
+      ? `<button class="btn warnb" onclick="examValidate()">Valider &amp; suivant &#8594;</button>`
+      : `<button class="btn warnb" onclick="examSkipQroc()">Suivant &#8594;</button>`;
+  } else {
+    footerBtn = `<button class="btn primary" id="validateBtn" onclick="validate()">${q.type==='qcm'?'Valider':'Afficher la réponse'}</button>`;
+  }
+  app.innerHTML=`
+    <div class="quiztop">
+      <div class="progress"><i style="width:${prog}%"></i></div>
+      ${timerHTML}
+      <div class="qcount">${pos+1} / ${list.length}</div>
+    </div>
+    ${timerBar}
+    <div class="qtheme">${theme.icon} ${theme.name}<span class="qtype ${q.type}">${q.type==='qcm'?'QCM':'QROC'}</span></div>
+    <div class="qtext">${esc(q.q)}</div>
+    <div class="hint">${exam?(q.type==='qcm'?'Coche ta réponse avant la fin du temps.':'Réponds mentalement, la correction viendra à la fin.'):(q.type==='qcm'?'Coche la ou les réponses, puis valide.':'Réponds puis affiche la correction.')}</div>
+    ${body}
+    <div id="fbZone"></div>
+    <div class="footer-bar" id="footer">${footerBtn}</div>`;
+  if(exam)startTimer();
+}
+function toggleOpt(el){
+  if(el.classList.contains('disabled'))return;
+  el.classList.toggle('sel');
+  el.querySelector('.box').textContent=el.classList.contains('sel')?'✓':'';
+}
+
+/* ============ Mode examen : validation ============ */
+function isQCMCorrect(q,sel){
+  const c=q.correct.slice().sort(), s=sel.slice().sort();
+  return c.length===s.length && c.every((v,i)=>v===s[i]);
+}
+function lockExamQCM(it,sel){
+  const ok=isQCMCorrect(it.q,sel);
+  recordAnswer(it.tid,it.idx,ok);
+  session.answers.push({item:it,isCorrect:ok,chosen:sel});
+}
+function examValidate(){
+  stopTimer();
+  const it=session.list[session.pos];
+  const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+  lockExamQCM(it,sel);
+  goNextExam();
+}
+function examSkipQroc(){
+  stopTimer();
+  const it=session.list[session.pos];
+  const txt=(document.getElementById('qrocInput')||{}).value||'';
+  session.answers.push({item:it,isCorrect:null,userText:txt});
+  goNextExam();
+}
+function goNextExam(){
+  session.pos++;
+  if(session.pos>=session.list.length)finishSession();
+  else renderQuestion();
+}
+
+/* ============ Mode apprentissage : validation ============ */
+function validate(){
+  const it=session.list[session.pos], q=it.q;
+  if(q.type==='qcm'){
+    const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+    const ok=isQCMCorrect(q,sel);
+    document.querySelectorAll('#opts .opt').forEach(el=>{
+      el.classList.add('disabled');
+      const k=el.dataset.k, good=q.correct.includes(k), picked=sel.includes(k);
+      const box=el.querySelector('.box'); el.classList.remove('sel');
+      if(good){el.classList.add('correct');box.textContent='✓';el.insertAdjacentHTML('beforeend','<span class="tag">Bonne réponse</span>');}
+      else if(picked){el.classList.add('wrong');box.textContent='✗';el.insertAdjacentHTML('beforeend','<span class="tag">Votre choix</span>');}
+    });
+    recordAnswer(it.tid,it.idx,ok);
+    session.answers.push({item:it,isCorrect:ok});
+    const goodTxt=q.correct.map(k=>k.toUpperCase()).join(', ');
+    document.getElementById('fbZone').innerHTML=`
+      <div class="feedback ${ok?'good':'bad'}">
+        <div class="ftitle">${ok?'&#10004; Correct !':'&#10008; Réponse incorrecte'}</div>
+        ${ok?'':`<div class="ans">Bonne(s) réponse(s) : <b>${goodTxt}</b></div>`}
+        <div class="exp">${esc(q.explain)}</div></div>`;
+    document.getElementById('footer').innerHTML=nextBtnHTML();
+    document.getElementById('fbZone').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    document.getElementById('footer').remove();
+    document.getElementById('fbZone').innerHTML=`
+      <div class="feedback neutral">
+        <div class="ftitle">&#128172; Réponse attendue</div>
+        <div class="ans"><b>${esc(q.answer)}</b></div>
+        <div class="exp">${esc(q.explain)}</div></div>
+      <div class="selfassess">
+        <button class="btn ok" onclick="qrocSelf(true)">&#10004; Je savais</button>
+        <button class="btn ghost" onclick="qrocSelf(false)">&#10008; Je ne savais pas</button>
+      </div>`;
+  }
+}
+function qrocSelf(known){
+  const it=session.list[session.pos];
+  recordAnswer(it.tid,it.idx,known);
+  session.answers.push({item:it,isCorrect:known});
+  const sa=document.querySelector('.selfassess');
+  const html=`<div class="footer-bar">${nextBtnHTML()}</div>`;
+  if(sa)sa.outerHTML=html; else app.insertAdjacentHTML('beforeend',html);
+  window.scrollTo(0,document.body.scrollHeight);
+}
+function nextBtnHTML(){
+  const last=session.pos>=session.list.length-1;
+  return `<button class="btn primary" onclick="nextQuestion()">${last?'Voir mes résultats &#127942;':'Question suivante &#8594;'}</button>`;
+}
+function nextQuestion(){
+  session.pos++;
+  if(session.pos>=session.list.length)finishSession();
+  else renderQuestion();
+}
+
+/* ============ Résultats ============ */
+function finishSession(){
+  stopTimer();
+  session.timeSpent=Math.round((Date.now()-session.tStart)/1000);
+  window.scrollTo(0,0);
+  renderResults();
+  // enregistrer la session (basée sur ce qui est déjà noté)
+  const graded=session.answers.filter(a=>a.isCorrect!==null);
+  const correct=graded.filter(a=>a.isCorrect).length;
+  session._sessionIndex=sessions.length;
+  sessions.push({date:Date.now(),scope:session.scope,mode:session.mode,total:graded.length,correct,timeSpent:session.timeSpent});
+  saveJSON(LS_SESS,sessions);
+}
+function renderResults(){
+  const ans=session.answers;
+  const graded=ans.filter(a=>a.isCorrect!==null);
+  const correct=graded.filter(a=>a.isCorrect).length;
+  const pct=graded.length?Math.round(correct/graded.length*100):0;
+  const pendingQroc=ans.filter(a=>a.isCorrect===null).length;
+  const color=pct>=80?'var(--ok)':pct>=50?'var(--accent)':'var(--ko)';
+  const msg=graded.length===0?'Auto-évalue tes QROC ↓':pct>=80?'Excellent ! &#127881;':pct>=50?'Bien, continue ! &#128170;':'À retravailler &#128218;';
+  const examExtra = session.mode==='exam'
+    ? `<div class="desc" style="margin:6px 0 0">&#9201;&#65039; ${session.timeSpent}s au total · ${Math.round(session.timeSpent/Math.max(ans.length,1))}s/question en moyenne</div>` : '';
+  const review=ans.map((a,i)=>renderReviewItem(a,i)).join('');
+  app.innerHTML=`
+    <div class="panel">
+      <div class="scorebox">
+        <div class="scorecircle" id="scoreCircle" style="background:${color}">
+          <div class="pct" id="scorePct">${graded.length?pct+'%':'—'}</div>
+          <div class="frac" id="scoreFrac">${correct} / ${graded.length}${graded.length?'':' noté'}</div>
+        </div>
+        <h3 style="margin:4px 0" id="scoreMsg">${msg}</h3>
+        <div class="desc" style="margin-bottom:0">${scopeName(session.scope)} · ${session.mode==='exam'?'Mode examen':'Mode apprentissage'}</div>
+        ${examExtra}
+        ${pendingQroc?`<div class="desc" id="pendNote" style="margin-top:6px;color:var(--accent);font-weight:600">${pendingQroc} QROC à auto-évaluer ci-dessous</div>`:''}
+      </div>
+    </div>
+    <div class="footer-bar" style="position:static">
+      <div class="big-actions">
+        <button class="btn primary" onclick="openConfig('${session.scope}')">&#128260; Rejouer</button>
+        <button class="btn ghost" onclick="goHome()">&#127968; Accueil</button>
+      </div>
+    </div>
+    <h2 class="section">Correction détaillée</h2>
+    <div class="review">${review}</div>
+    <div class="footer-bar" style="position:static"><button class="btn ghost" onclick="showAnalyse()">Voir mon analyse globale &#128202;</button></div>`;
+}
+function renderReviewItem(a,i){
+  const q=a.item.q, th=themeById(a.item.tid);
+  const mk=a.isCorrect===null?'&#10067;':a.isCorrect?'&#9989;':'&#10060;';
+  let corr='';
+  if(q.type==='qcm'){
+    const goodTxt=q.correct.map(k=>k.toUpperCase()).join(', ');
+    corr=`<div class="rev-corr"><b>Bonne(s) réponse(s) : ${goodTxt}</b> — ${q.options.filter(o=>q.correct.includes(o.k)).map(o=>nl2br(esc(o.t))).join(' ; ')}<br><span style="color:var(--muted)">${esc(q.explain)}</span></div>`;
+  } else {
+    corr=`<div class="rev-corr"><b>Réponse : ${esc(q.answer)}</b><br><span style="color:var(--muted)">${esc(q.explain)}</span></div>`;
+    if(a.isCorrect===null){
+      corr+=`<div class="rev-self" id="self-${i}">
+        <button onclick="reviewSelf(${i},true)">&#10004; Je savais</button>
+        <button onclick="reviewSelf(${i},false)">&#10008; Je ne savais pas</button></div>`;
+    }
+  }
+  return `<div class="rev-item" id="rev-${i}">
+    <div class="rev-head"><div class="mk" id="mk-${i}">${mk}</div>
+    <div><div>${esc(q.q)}</div><div class="qx">${th.icon} ${th.name} · ${q.type.toUpperCase()}</div></div></div>
+    ${corr}</div>`;
+}
+function reviewSelf(i,known){
+  const a=session.answers[i];
+  if(a.isCorrect!==null)return;
+  a.isCorrect=known;
+  recordAnswer(a.item.tid,a.item.idx,known);
+  document.getElementById('mk-'+i).innerHTML=known?'&#9989;':'&#10060;';
+  const sd=document.getElementById('self-'+i);
+  if(sd){sd.querySelectorAll('button').forEach(b=>b.classList.remove('pk-ok','pk-ko'));
+    sd.children[known?0:1].classList.add(known?'pk-ok':'pk-ko');}
+  // maj score en direct
+  const graded=session.answers.filter(x=>x.isCorrect!==null);
+  const correct=graded.filter(x=>x.isCorrect).length;
+  const pct=graded.length?Math.round(correct/graded.length*100):0;
+  const color=pct>=80?'var(--ok)':pct>=50?'var(--accent)':'var(--ko)';
+  document.getElementById('scoreCircle').style.background=color;
+  document.getElementById('scorePct').textContent=pct+'%';
+  document.getElementById('scoreFrac').textContent=correct+' / '+graded.length;
+  const pend=session.answers.filter(x=>x.isCorrect===null).length;
+  const pn=document.getElementById('pendNote'); if(pn)pn.textContent=pend?pend+' QROC à auto-évaluer ci-dessous':'Toutes les questions sont évaluées ✔';
+  // maj session enregistrée
+  if(sessions[session._sessionIndex]){sessions[session._sessionIndex].total=graded.length;sessions[session._sessionIndex].correct=correct;saveJSON(LS_SESS,sessions);}
+}
+
+/* ============ Analyse ============ */
+function showAnalyse(){
+  stopTimer(); session=null;
+  window.scrollTo(0,0); homeBtn.classList.add('show');
+  subtitle.textContent="Mon analyse";
+  if(sessions.length===0){
+    app.innerHTML=`<div class="panel"><div class="empty">&#128202;<br><br>Aucune session terminée.<br>Lance un entraînement pour suivre tes progrès ici !</div></div>
+      <div class="footer-bar" style="position:static"><button class="btn primary" onclick="goHome()">Commencer &#9654;</button></div>`;
+    return;
+  }
+  let totSeen=0,totCorrect=0;const totQ=totalQuestions();
+  const rows=QCM_DATA.themes.map(t=>{
+    let seen=0,correct=0;
+    Object.values(stats[t.id]||{}).forEach(o=>{if(o.seen){seen++;if(o.lastCorrect)correct++}});
+    totSeen+=seen;totCorrect+=correct;
+    const cov=Math.round(seen/t.questions.length*100), succ=seen?Math.round(correct/seen*100):0;
+    const col=succ>=80?'var(--ok)':succ>=50?'var(--accent)':'var(--ko)';
+    return {t,seen,correct,cov,succ,col};
+  });
+  const globalSucc=totSeen?Math.round(totCorrect/totSeen*100):0;
+  const globalCov=Math.round(totSeen/totQ*100);
+  const mastered=masteredCount(), errs=errorPool();
+  const last=sessions.slice(-8);
+  const spark=last.map(s=>{
+    const p=s.total?Math.round(s.correct/s.total*100):0;
+    const col=p>=80?'var(--ok)':p>=50?'var(--accent)':'var(--ko)';
+    return `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px">
+      <div style="font-size:10px;color:var(--muted);font-weight:700">${p}%</div>
+      <div style="width:70%;height:${Math.max(p,4)}%;background:${col};border-radius:4px 4px 0 0" title="${s.mode==='exam'?'Examen':'Apprentissage'}"></div></div>`;
+  }).join('');
+  const themeRows=rows.map(r=>`
+    <div class="theme-stat"><div class="top"><span>${r.t.icon} ${r.t.name}</span>
+      <span class="pct" style="color:${r.seen?r.col:'var(--muted)'}">${r.seen?r.succ+'%':'—'}</span></div>
+      <div class="bar"><i style="width:${r.seen?r.succ:0}%;background:${r.col}"></i></div>
+      <div class="meta">${r.correct}/${r.seen} réussies · ${r.seen}/${r.t.questions.length} vues (${r.cov}% du thème)</div></div>`).join('');
+  const errList = errs.length
+    ? `<h2 class="section">Questions à revoir (${errs.length})</h2>
+       <div class="footer-bar" style="position:static;margin-top:0"><button class="btn warnb" onclick="openConfig('ERRORS')">&#128260; S'entraîner sur mes erreurs</button></div>
+       <div class="revlist">${errs.slice(0,25).map(e=>`<div class="revq">${esc(e.q.q)}<div class="rt">${themeById(e.tid).icon} ${themeById(e.tid).name}</div></div>`).join('')}
+       ${errs.length>25?`<div class="hint" style="text-align:center">…et ${errs.length-25} autres</div>`:''}</div>`
+    : `<h2 class="section">Questions à revoir</h2><div class="panel"><div class="empty">&#127881; Aucune erreur en attente. Beau travail !</div></div>`;
+  app.innerHTML=`
+    <div class="stat-row">
+      <div class="stat"><div class="v">${globalSucc}%</div><div class="l">Réussite globale</div></div>
+      <div class="stat"><div class="v">${globalCov}%</div><div class="l">Programme vu</div></div>
+      <div class="stat"><div class="v">${sessions.length}</div><div class="l">Sessions</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="v ok">${mastered}</div><div class="l">Questions maîtrisées</div></div>
+      <div class="stat"><div class="v ko">${errs.length}</div><div class="l">À revoir</div></div>
+      <div class="stat"><div class="v">${totSeen}/${totQ}</div><div class="l">Questions vues</div></div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:15px;margin-bottom:12px">&#128200; Évolution (dernières sessions)</h3>
+      <div style="display:flex;gap:6px;align-items:flex-end;height:110px;border-bottom:1px solid var(--line);padding-bottom:2px">${spark}</div>
+    </div>
+    <h2 class="section">Réussite par thème</h2>
+    ${themeRows}
+    ${errList}
+    <div style="text-align:center"><button class="reset" onclick="resetStats()">&#128465; Réinitialiser mes statistiques</button></div>
+    <div class="footer-bar" style="position:static"><button class="btn primary" onclick="goHome()">&#127968; Retour à l'accueil</button></div>`;
+}
+function resetStats(){
+  if(confirm("Effacer toutes tes statistiques et ton historique ? Action irréversible.")){
+    stats={};sessions=[];saveJSON(LS_STATS,stats);saveJSON(LS_SESS,sessions);
+    toast("Statistiques réinitialisées");showAnalyse();
+  }
+}
+
+/* ============ PWA : installation ============ */
+let deferredPrompt=null;
+(function setupPWA(){
+  const al=document.createElement('link');al.rel='apple-touch-icon';al.href=ICON192;document.head.appendChild(al);
+  try{
+    const mf={name:"QCM Bloc 3 — Délégué Pharmaceutique",short_name:"QCM Bloc 3",start_url:location.href,scope:"./",
+      display:"standalone",background_color:"#f3efe4",theme_color:"#6f8f57",
+      icons:[{src:ICON192,sizes:"192x192",type:"image/png",purpose:"any"},
+             {src:ICON512,sizes:"512x512",type:"image/png",purpose:"any"},
+             {src:ICON512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};
+    const blob=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
+    const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(blob);document.head.appendChild(ml);
+  }catch(e){}
+  if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+})();
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.add('show');});
+window.addEventListener('appinstalled',()=>{document.getElementById('installBtn').classList.remove('show');deferredPrompt=null;});
+function doInstall(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;document.getElementById('installBtn').classList.remove('show');});}
+  else{toast("Sur iPhone : Partager → « Sur l'écran d'accueil »");}
+}
+
+/* ============ Démarrage ============ */
+goHome();
+</script>
+</body>
+</html>
