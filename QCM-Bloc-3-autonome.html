@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#6f8f57">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="QCM Bloc 3">
+<title>QCM Bloc 3 — Délégué Pharmaceutique</title>
+<style>
+  :root{
+    --bg:#f3efe4; --card:#fffdf6; --primary:#6f8f57; --primary-d:#5a7747;
+    --ok:#4f8a3d; --ok-bg:#e8f0d9; --ko:#bf6a57; --ko-bg:#f5e8e1;
+    --txt:#3a3a2e; --muted:#8c8c7a; --line:#e6e1d2; --accent:#d98a54;
+    --shadow:0 2px 10px rgba(90,105,55,.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.5;
+    padding-bottom:env(safe-area-inset-bottom)}
+  .wrap{max-width:820px;margin:0 auto;padding:16px}
+  header.app{background:linear-gradient(135deg,var(--primary),#93b277);color:#fff;
+    padding:18px 16px;position:sticky;top:0;z-index:20;box-shadow:var(--shadow);padding-top:calc(18px + env(safe-area-inset-top))}
+  header.app .wrap{padding:0 16px;display:flex;align-items:center;gap:12px}
+  header.app h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px}
+  header.app .sub{font-size:12px;opacity:.9;margin-top:2px}
+  .home-btn{background:rgba(255,255,255,.18);border:0;color:#fff;font-size:20px;
+    width:40px;height:40px;border-radius:10px;cursor:pointer;display:none;align-items:center;justify-content:center;flex:0 0 auto}
+  .home-btn.show{display:flex}
+  h2.section{font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
+    margin:22px 4px 10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .theme{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;
+    cursor:pointer;transition:.15s;box-shadow:var(--shadow);text-align:left}
+  .theme:active{transform:scale(.98)}
+  .theme:hover{border-color:var(--primary)}
+  .theme .ico{font-size:26px}
+  .theme .nm{font-weight:600;font-size:14.5px;margin-top:8px}
+  .theme .ct{font-size:12px;color:var(--muted);margin-top:3px}
+  .theme .bar{height:5px;background:var(--line);border-radius:4px;margin-top:9px;overflow:hidden}
+  .theme .bar > i{display:block;height:100%;background:var(--ok);width:0}
+  .big-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+  .card-action{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+    cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;transition:.15s;text-align:left}
+  .card-action:active{transform:scale(.98)}
+  .card-action .ico{font-size:26px;flex:0 0 auto}
+  .card-action b{display:block;font-size:15px}
+  .card-action span{font-size:12px;color:var(--muted)}
+  .card-action.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .card-action.primary span{color:rgba(255,255,255,.85)}
+  .card-action.warn{background:#f7f0e0;border-color:#f0c987}
+  .card-action.warn .badge{margin-left:auto;background:var(--accent);color:#fff;font-weight:800;font-size:13px;border-radius:20px;padding:2px 10px;flex:0 0 auto}
+  .card-action.disabled{opacity:.55;cursor:default}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .panel h3{margin:0 0 4px;font-size:18px}
+  .panel .desc{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .flabel{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin:4px 2px 8px}
+  .lenrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:8px 16px;
+    cursor:pointer;font-size:14px;font-weight:600;color:var(--muted)}
+  .chip.on{border-color:var(--primary);color:var(--primary);background:#eaf0dd}
+  .moderow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .modecard{border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:#fff}
+  .modecard.on{border-color:var(--primary);background:#eaf0dd}
+  .modecard .mt{font-weight:700;font-size:14.5px}
+  .modecard .md{font-size:12px;color:var(--muted);margin-top:3px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;
+    padding:14px 20px;font-size:15.5px;font-weight:700;cursor:pointer;width:100%;transition:.15s}
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.primary:active{background:var(--primary-d)}
+  .btn.ghost{background:#f3efe4;color:var(--txt)}
+  .btn.ok{background:var(--ok);color:#fff}
+  .btn.warnb{background:var(--accent);color:#fff}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .quiztop{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .progress{flex:1;height:8px;background:#e6e1d2;border-radius:6px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:var(--accent);width:0;transition:.3s}
+  .qcount{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+  /* Timer */
+  .timer{display:flex;align-items:center;gap:7px;font-weight:800;font-size:15px;color:var(--primary);
+    background:#eaf0dd;border-radius:20px;padding:4px 12px;white-space:nowrap}
+  .timer.warn{color:#b9791a;background:#f6ead2}
+  .timer.danger{color:#fff;background:var(--ko);animation:pulse .8s infinite}
+  @keyframes pulse{50%{opacity:.6}}
+  .timerbar{height:5px;background:#e6e1d2;border-radius:4px;overflow:hidden;margin:4px 0 2px}
+  .timerbar > i{display:block;height:100%;background:var(--primary);width:100%;transition:width 1s linear}
+  .timerbar > i.warn{background:var(--accent)}
+  .timerbar > i.danger{background:var(--ko)}
+  .qtheme{font-size:12px;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:8px 2px 0}
+  .qtype{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;letter-spacing:.3px}
+  .qtype.qcm{background:#eaf0dd;color:var(--primary)}
+  .qtype.qroc{background:#f6ead2;color:#b9791a}
+  .qtext{font-size:18.5px;font-weight:600;margin:8px 2px 4px;line-height:1.4}
+  .hint{font-size:12.5px;color:var(--muted);margin:2px 2px 14px}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .opt{display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--line);
+    border-radius:12px;padding:13px 14px;cursor:pointer;transition:.12s;box-shadow:var(--shadow)}
+  .opt:active{transform:scale(.99)}
+  .opt .box{width:24px;height:24px;border-radius:7px;border:2px solid #c8ccb5;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:800}
+  .opt.sel{border-color:var(--primary);background:#eaf0dd}
+  .opt.sel .box{background:var(--primary);border-color:var(--primary)}
+  .opt .lbl{font-size:15px}
+  .opt .key{font-weight:700;color:var(--muted);margin-right:2px}
+  .opt.disabled{cursor:default}
+  .opt.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .opt.correct .box{background:var(--ok);border-color:var(--ok)}
+  .opt.wrong{border-color:var(--ko);background:var(--ko-bg)}
+  .opt.wrong .box{background:var(--ko);border-color:var(--ko)}
+  .opt .tag{margin-left:auto;font-size:11px;font-weight:800;padding:2px 8px;border-radius:8px}
+  .opt.correct .tag{background:var(--ok);color:#fff}
+  .opt.wrong .tag{background:var(--ko);color:#fff}
+  textarea.qroc{width:100%;min-height:90px;border:1.5px solid var(--line);border-radius:12px;
+    padding:12px;font-size:15px;font-family:inherit;resize:vertical;background:#fff}
+  textarea.qroc:focus{outline:none;border-color:var(--primary)}
+  .feedback{border-radius:14px;padding:15px 16px;margin-top:16px;border:1.5px solid;animation:pop .2s}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .feedback.good{background:var(--ok-bg);border-color:var(--ok)}
+  .feedback.bad{background:var(--ko-bg);border-color:var(--ko)}
+  .feedback.neutral{background:#eef1e3;border-color:var(--primary)}
+  .feedback .ftitle{font-weight:800;font-size:15.5px;display:flex;align-items:center;gap:8px}
+  .feedback.good .ftitle{color:var(--ok)}
+  .feedback.bad .ftitle{color:var(--ko)}
+  .feedback.neutral .ftitle{color:var(--primary-d)}
+  .feedback .ans{margin-top:10px;font-size:14.5px}
+  .feedback .ans b{color:var(--txt)}
+  .feedback .exp{margin-top:10px;font-size:14px;color:#575a49;background:rgba(255,255,255,.6);
+    border-radius:10px;padding:10px 12px}
+  .selfassess{display:flex;gap:10px;margin-top:14px}
+  .selfassess .btn{width:auto;flex:1;padding:12px}
+  .footer-bar{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 70%,transparent);
+    padding:14px 0 calc(14px + env(safe-area-inset-bottom));margin-top:18px}
+  .scorebox{text-align:center;padding:10px 0 4px}
+  .scorecircle{width:130px;height:130px;border-radius:50%;margin:8px auto 12px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:800;box-shadow:var(--shadow)}
+  .scorecircle .pct{font-size:34px;line-height:1}
+  .scorecircle .frac{font-size:13px;opacity:.9;margin-top:4px;font-weight:600}
+  .review{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .rev-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-size:14px;box-shadow:var(--shadow)}
+  .rev-head{display:flex;gap:10px;align-items:flex-start}
+  .rev-item .mk{font-size:17px;flex:0 0 auto;line-height:1.3}
+  .rev-item .qx{color:var(--muted);font-size:12px;margin-top:2px}
+  .rev-corr{margin-top:9px;font-size:13.5px;background:#f2f0e5;border-radius:9px;padding:9px 11px;color:#575a49}
+  .rev-corr b{color:var(--txt)}
+  .rev-self{display:flex;gap:8px;margin-top:9px}
+  .rev-self button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px;
+    font-size:13px;font-weight:700;cursor:pointer;color:var(--muted)}
+  .rev-self button.pk-ok{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+  .rev-self button.pk-ko{border-color:var(--ko);color:var(--ko);background:var(--ko-bg)}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 8px;
+    text-align:center;box-shadow:var(--shadow)}
+  .stat .v{font-size:23px;font-weight:800;color:var(--primary)}
+  .stat .v.ok{color:var(--ok)} .stat .v.ko{color:var(--ko)}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+  .theme-stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    margin-bottom:9px;box-shadow:var(--shadow)}
+  .theme-stat .top{display:flex;justify-content:space-between;align-items:center;font-size:14.5px;font-weight:600}
+  .theme-stat .pct{font-weight:800}
+  .theme-stat .bar{height:8px;background:var(--line);border-radius:5px;margin-top:8px;overflow:hidden}
+  .theme-stat .bar > i{display:block;height:100%;border-radius:5px}
+  .theme-stat .meta{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .revlist{display:flex;flex-direction:column;gap:7px}
+  .revq{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--ko);border-radius:10px;
+    padding:10px 12px;font-size:13.5px;box-shadow:var(--shadow)}
+  .revq .rt{font-size:11px;color:var(--muted);margin-top:3px}
+  .empty{text-align:center;color:var(--muted);padding:30px 16px;font-size:14.5px}
+  .reset{background:none;border:1px solid var(--ko);color:var(--ko);border-radius:10px;padding:9px 14px;
+    font-size:13px;font-weight:600;cursor:pointer;margin-top:14px}
+  .hidden{display:none!important}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#3a3a2e;color:#fff;
+    padding:11px 18px;border-radius:24px;font-size:13.5px;z-index:60;opacity:0;transition:.25s;pointer-events:none;box-shadow:var(--shadow)}
+  .toast.show{opacity:1}
+  .installbtn{background:rgba(255,255,255,.2);border:0;color:#fff;font-size:12px;font-weight:700;
+    border-radius:20px;padding:6px 12px;cursor:pointer;margin-left:auto;display:none}
+  .installbtn.show{display:inline-block}
+  @media(max-width:520px){ .qtext{font-size:17px} }
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="wrap">
+    <button class="home-btn" id="homeBtn" onclick="goHome()">&#8592;</button>
+    <div>
+      <h1>QCM Bloc 3</h1>
+      <div class="sub" id="subtitle">Délégué Pharmaceutique &middot; Bloc 3</div>
+    </div>
+    <button class="installbtn" id="installBtn" onclick="doInstall()">&#11015; Installer</button>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// Base de données QCM / QROC — BLOC 3 (Délégué Pharmaceutique)
+// 3 slots : Réglementaire · Iatrogénie-Galénique-Pharmaco · Générique
+const QCM_DATA = {
+  themes: [
+    {
+      id: "reglementaire",
+      name: "Réglementaire",
+      icon: "\u{1F4CB}",
+      questions: [
+        {type:"qroc", q:"Quelles sont les deux définitions du médicament ?", answer:"La définition par présentation (substance présentée comme ayant des propriétés préventives ou curatives) et la définition par fonction (substance modifiant une fonction physiologique ou établissant un diagnostic). Art. L.5111-1 CSP.", explain:"Présentation = ce qui est revendiqué/allégué ; fonction = l'action réelle du produit."},
+        {type:"qcm", q:"Un pharmacien mélange plusieurs plantes pour un patient précis sur ordonnance : comment appelle-t-on cette pratique ?", options:[{k:"a",t:"Une préparation officinale"},{k:"b",t:"Une préparation magistrale"},{k:"c",t:"Une préparation hospitalière"},{k:"d",t:"Un complément alimentaire"}], correct:["b"], explain:"La préparation magistrale est réalisée selon une prescription pour un patient déterminé."},
+        {type:"qroc", q:"Quelles sont les trois catégories de préparations pharmaceutiques ?", answer:"Magistrale (selon prescription, pour un patient déterminé), officinale (préparée à l'avance selon la Pharmacopée), hospitalière (préparée en PUI d'un établissement de santé).", explain:"Elles sont réalisées en l'absence de spécialité disponible équivalente."},
+        {type:"qroc", q:"Que faut-il pour mettre un médicament sur le marché en France ?", answer:"Une AMM (Autorisation de Mise sur le Marché), délivrée après évaluation du rapport bénéfice/risque par l'ANSM (procédure nationale) ou l'EMA (procédure centralisée).", explain:"Le dossier doit démontrer qualité, sécurité et efficacité."},
+        {type:"qroc", q:"Quelle est la différence entre le RCP et la notice du médicament ?", answer:"Le RCP (Résumé des Caractéristiques du Produit) est un document technique destiné aux professionnels, approuvé à l'AMM. La notice est destinée au patient, en langage clair, insérée dans la boîte.", explain:"La notice est dérivée du RCP mais vulgarisée."},
+        {type:"qroc", q:"Quelles sont les quatre phases des essais cliniques ?", answer:"Phase 1 : volontaires sains (tolérance/sécurité). Phase 2 : patients (efficacité, posologie). Phase 3 : large population (confirmation, souvent vs comparateur). Phase 4 : post-AMM (pharmacovigilance, vie réelle).", explain:"Le développement complet dure en moyenne 10 à 15 ans."},
+        {type:"qroc", q:"Qui autorise un essai clinique et qui rend l'avis éthique ?", answer:"L'ANSM autorise l'essai (sécurité) ; le CPP (Comité de Protection des Personnes) rend l'avis éthique ; la CNIL intervient pour les données personnelles.", explain:"Trois acteurs : ANSM, CPP, CNIL."},
+        {type:"qroc", q:"Qui doit obligatoirement passer par la procédure centralisée d'AMM ?", answer:"Les médicaments issus des biotechnologies, les médicaments orphelins, les thérapies innovantes, et les nouvelles substances pour le VIH, le cancer, le diabète, les maladies neurodégénératives, auto-immunes et virales.", explain:"Procédure centralisée = AMM européenne unique."},
+        {type:"qroc", q:"Qui délivre (signe) l'AMM européenne issue de la procédure centralisée ?", answer:"La Commission européenne, sur la base de l'avis scientifique du CHMP (Comité des médicaments à usage humain) de l'EMA.", explain:"L'EMA évalue, la Commission européenne signe."},
+        {type:"qroc", q:"Pour quelles raisons peut-on refuser une AMM ?", answer:"Rapport bénéfice/risque défavorable, efficacité insuffisamment démontrée, composition non conforme, dossier incomplet ou non conforme.", explain:"Les mêmes motifs peuvent conduire à une suspension ou un retrait ultérieur."},
+        {type:"qroc", q:"Quelle est la durée de protection d'un brevet pharmaceutique ?", answer:"20 ans à compter du dépôt, prolongeable de 5 ans maximum via le CCP (Certificat Complémentaire de Protection), avec 6 mois supplémentaires en cas d'études pédiatriques.", explain:"À l'expiration du brevet, les génériques peuvent arriver."},
+        {type:"qroc", q:"Qui examine le dépôt d'une marque de médicament ?", answer:"Un double examen : l'INPI (validité de la marque au titre de la propriété industrielle) et l'ANSM (risque de confusion et de sécurité pour le patient).", explain:"INPI + ANSM."},
+        {type:"qroc", q:"Qu'est-ce que le SMR et à quoi sert-il ?", answer:"Le Service Médical Rendu évalue l'intérêt du médicament (gravité de la pathologie, efficacité, effets indésirables, place dans la stratégie). Il conditionne le taux de remboursement (65 %, 30 %, 15 % ou non remboursé).", explain:"SMR insuffisant = pas de remboursement."},
+        {type:"qroc", q:"Qu'est-ce que l'ASMR et à quoi sert-il ?", answer:"L'Amélioration du Service Médical Rendu évalue le progrès thérapeutique par rapport aux traitements existants, sur une échelle de I (majeure) à V (absence). Elle influence le prix du médicament.", explain:"ASMR élevée = argument pour un prix plus élevé."},
+        {type:"qroc", q:"Quelle est la différence entre la Commission de la Transparence et le CEPS ?", answer:"La Commission de la Transparence (HAS) évalue le SMR et l'ASMR (remboursement). Le CEPS (Comité Économique des Produits de Santé) négocie et fixe le prix avec le laboratoire.", explain:"HAS = remboursement ; CEPS = prix."},
+        {type:"qroc", q:"Qu'est-ce que l'accès précoce (réforme 2021) ?", answer:"Une prise en charge dérogatoire et anticipée de médicaments innovants avant l'AMM ou le remboursement, pour des pathologies graves sans alternative. Il regroupe les anciennes ATU et l'accès compassionnel, et est accordé par la HAS.", explain:"Remplace les ATU depuis 2021."},
+        {type:"qroc", q:"Quel est le rôle de l'ANSM ?", answer:"Autorité française : elle évalue la sécurité, la qualité et l'efficacité des produits de santé, délivre les AMM nationales, gère la pharmacovigilance/matériovigilance, contrôle le marché et peut suspendre ou retirer un produit.", explain:"C'est l'autorité compétente nationale."},
+        {type:"qroc", q:"Quel est le rôle de la HAS ?", answer:"La Haute Autorité de Santé évalue le SMR/ASMR des médicaments et le SA/ASA des DM (via ses commissions), émet des recommandations de bonnes pratiques et contribue à la décision de remboursement.", explain:"HAS = évaluation médico-économique et recommandations."},
+        {type:"qroc", q:"Qu'est-ce que la loi HPST (2009) a permis ?", answer:"La loi Hôpital, Patients, Santé, Territoires a notamment créé les ARS (Agences Régionales de Santé), qui pilotent la politique de santé au niveau régional.", explain:"HPST = création des ARS."},
+        {type:"qroc", q:"Quelle est la différence entre liste 1, liste 2 et stupéfiants ?", answer:"Liste 1 (cadre rouge) : risque élevé, prescription obligatoire, non renouvelable sauf mention. Liste 2 (cadre vert) : risque moindre, renouvelable sauf mention contraire. Stupéfiants (cadre rouge) : ordonnance sécurisée, durée limitée, délivrance fractionnée possible.", explain:"Classement selon le niveau de risque."},
+        {type:"qroc", q:"Qu'est-ce qui permet à un médicament à base de plantes d'être vendu hors pharmacie ?", answer:"Son inscription sur une liste dérogatoire fixée par arrêté (plantes dont l'usage traditionnel est jugé sûr). En dehors de cette liste, le monopole officinal s'applique.", explain:"Sinon, monopole pharmaceutique."},
+        {type:"qroc", q:"Quelle est la définition d'un dispositif médical et ses 4 critères cumulatifs ?", answer:"1) Destination médicale (prévention, diagnostic, surveillance, traitement, compensation) ; 2) usage chez l'humain ; 3) action principale NON pharmacologique, immunologique ou métabolique ; 4) destination attribuée par le fabricant. (Règlement UE 2017/745, Art. L.5211-1 CSP)", explain:"Le critère 3 distingue le DM du médicament."},
+        {type:"qcm", q:"Un gel antiseptique utilisé pour désinfecter une plaie est-il un dispositif médical ?", options:[{k:"a",t:"Oui, tout produit appliqué sur l'homme est un DM"},{k:"b",t:"Non, son action principale est pharmacologique, c'est un médicament"},{k:"c",t:"Oui si son prix est inférieur à 50 €"},{k:"d",t:"Cela dépend du fabricant"}], correct:["b"], explain:"L'action pharmacologique exclut le statut de DM : c'est un médicament."},
+        {type:"qroc", q:"Quelles sont les 4 classes de risque des DM avec un exemple ?", answer:"Classe I (faible : pansement, béquilles), IIa (modéré : lentilles, aiguilles), IIb (élevé : pompe à perfusion, ventilateur), III (le plus élevé : stent, prothèse, valve cardiaque).", explain:"Le risque croît de I à III."},
+        {type:"qcm", q:"Un fabricant français de DM de classe IIa doit-il faire appel à un organisme notifié ?", options:[{k:"a",t:"Non, la classe IIa permet l'auto-certification"},{k:"b",t:"Oui, l'intervention d'un ON est obligatoire dès la classe IIa"},{k:"c",t:"Seulement si le DM est stérile"},{k:"d",t:"Uniquement pour les DM implantables"}], correct:["b"], explain:"L'organisme notifié intervient pour les classes IIa, IIb et III (pas pour la classe I non stérile/non mesurante)."},
+        {type:"qroc", q:"Quelle est la différence entre la Directive 93/42/CEE et le Règlement MDR 2017/745 ?", answer:"La directive devait être transposée par chaque État membre (interprétation nationale). Le règlement MDR s'applique directement et uniformément dans toute l'UE, sans transposition, depuis le 26 mai 2021.", explain:"Règlement = application directe ; directive = transposition."},
+        {type:"qroc", q:"Qu'est-ce qu'un organisme notifié (ON) et un exemple français ?", answer:"Un organisme tiers accrédité, désigné par un État membre, qui évalue la conformité des DM de classes IIa, IIb et III. En France : le GMED.", explain:"Les ON sont listés dans la base européenne NANDO."},
+        {type:"qcm", q:"Un DM marqué CE peut-il être commercialisé en France sans être inscrit sur la LPP ?", options:[{k:"a",t:"Non, le marquage CE et la LPP sont liés"},{k:"b",t:"Oui, mais il ne sera pas remboursé par l'Assurance maladie"},{k:"c",t:"Oui, et il sera automatiquement remboursé à 65 %"},{k:"d",t:"Cela dépend du classement ANSM"}], correct:["b"], explain:"Marquage CE (sécurité/performance) et remboursement (LPP) sont deux procédures indépendantes."},
+        {type:"qroc", q:"Qu'est-ce que l'IUD et de quoi est-il composé ?", answer:"L'Identifiant Unique du Dispositif : un code de traçabilité du DM. Il comprend l'IUD-DI (Device Identifier : le modèle, commun à tous les exemplaires) et l'IUD-PI (Production Identifier : lot, série, date, propre à chaque unité).", explain:"DI = modèle ; PI = production."},
+        {type:"qcm", q:"Qu'est-ce que l'IUD-DI ?", options:[{k:"a",t:"L'identifiant du lot de fabrication"},{k:"b",t:"L'identifiant du modèle du DM, commun à tous les exemplaires du même modèle"},{k:"c",t:"Le numéro de l'organisme notifié"},{k:"d",t:"Le code de remboursement LPP"}], correct:["b"], explain:"Le DI identifie le modèle ; le lot correspond à l'IUD-PI."},
+        {type:"qroc", q:"Qu'est-ce qu'EUDAMED ?", answer:"La base de données européenne centralisée (gérée par la Commission européenne), comportant 6 modules. L'enregistrement des fabricants et des DM y est obligatoire avant la mise sur le marché.", explain:"Base européenne de traçabilité et de vigilance des DM."},
+        {type:"qroc", q:"Quels sont les délais de déclaration d'un incident de matériovigilance à l'ANSM ?", answer:"Immédiat en cas de décès ou de dégradation grave ; 2 jours en cas de risque grave pour la santé publique ; 15 jours ouvrés pour un incident grave sans décès.", explain:"Le délai dépend de la gravité."},
+        {type:"qcm", q:"Un patient a subi un incident grave (sans décès) avec un DM de classe IIb. Quel est le délai de déclaration à l'ANSM ?", options:[{k:"a",t:"30 jours calendaires"},{k:"b",t:"Aucune obligation, seul le fabricant déclare"},{k:"c",t:"15 jours ouvrés (immédiat si risque vital)"},{k:"d",t:"6 mois via le rapport PSUR"}], correct:["c"], explain:"15 jours ouvrés pour un incident grave sans décès ; immédiat si décès ou risque vital."},
+        {type:"qcm", q:"La publicité d'un DM de classe III auprès du grand public est-elle autorisée en France ?", options:[{k:"a",t:"Oui, sans restriction"},{k:"b",t:"Oui, avec accord de l'ANSM uniquement"},{k:"c",t:"Non, elle est interdite (Art. L.5213-1 CSP)"},{k:"d",t:"Cela dépend du canal de diffusion"}], correct:["c"], explain:"Publicité grand public interdite pour les DM de classes IIb et III, sauf exceptions par décret."},
+        {type:"qcm", q:"Un chirurgien vous demande des informations sur un usage de votre DM non mentionné dans l'IFU (off-label). Que faites-vous ?", options:[{k:"a",t:"Vous répondez si vous avez des données"},{k:"b",t:"Vous refusez et orientez vers le service médical/réglementaire du fabricant"},{k:"c",t:"Vous transmettez des études publiées sur cet usage"},{k:"d",t:"Vous expliquez l'usage off-label en précisant qu'il n'est pas validé"}], correct:["b"], explain:"Le délégué ne doit jamais promouvoir un usage hors IFU (off-label)."},
+        {type:"qroc", q:"Quel est le circuit de remboursement d'un dispositif médical ?", answer:"Après le marquage CE, le fabricant dépose un dossier à la HAS (CNEDiMTS) qui évalue le Service Attendu (SA) et son Amélioration (ASA) ; un arrêté fixe le tarif et inscrit le DM sur la LPP (Liste des Produits et Prestations).", explain:"LPP pour les DM, différente du circuit médicament."},
+        {type:"qroc", q:"Quelles sont les principales obligations du délégué faisant la promotion de DM ?", answer:"Vérifier le marquage CE et la classe, disposer de la déclaration de conformité et de l'IFU, s'en tenir aux allégations de l'IFU, ne jamais évoquer d'usage off-label ni de retraitement de DUU, remonter immédiatement tout incident.", explain:"Toujours s'appuyer sur la documentation officielle."},
+        {type:"qroc", q:"Quelle est la définition réglementaire d'un complément alimentaire ?", answer:"Une denrée alimentaire destinée à compléter le régime normal, source concentrée de nutriments ou de substances à effet nutritionnel/physiologique, commercialisée sous forme de doses (gélules, comprimés, ampoules…). Directive 2002/46/CE, décret 2006-352.", explain:"C'est une denrée alimentaire, pas un médicament."},
+        {type:"qroc", q:"Quels sont les deux termes qu'un délégué ne doit jamais utiliser pour un complément alimentaire ?", answer:"« Alicament » et « nutraceutique » (nutracautique) : termes non réglementaires. La seule dénomination de vente est « complément alimentaire ».", explain:"Ces termes laisseraient supposer un effet thérapeutique."},
+        {type:"qroc", q:"Quelle est la différence entre un complément alimentaire et un médicament ?", answer:"Le médicament soigne une pathologie (personnes malades, propriétés thérapeutiques). Le complément alimentaire entretient le bien-être (personnes en bonne santé, propriétés nutritionnelles/physiologiques) et n'a aucune action thérapeutique.", explain:"Aucune allégation thérapeutique sur un complément."},
+        {type:"qroc", q:"Quels sont les ingrédients autorisés dans un complément alimentaire ?", answer:"Vitamines et minéraux ; substances à but nutritionnel/physiologique ; plantes et préparations de plantes ; ingrédients Novel Food ; additifs, arômes et auxiliaires technologiques autorisés en alimentation.", explain:"Décret 2006-352, art. 4."},
+        {type:"qroc", q:"Qu'est-il strictement interdit d'affirmer sur un complément alimentaire ?", answer:"Toute propriété de prévention, traitement ou guérison d'une maladie ; toute référence à une perte de poids ; la recommandation d'un professionnel de santé nommément désigné ; toute allégation non autorisée par l'EFSA.", explain:"Interdiction de toute allégation thérapeutique."},
+        {type:"qroc", q:"Quelle est la procédure de déclaration à la mise sur le marché d'un complément alimentaire ?", answer:"Déclaration via le téléservice Téléicare, adressée à la DGCCRF. Depuis le 1er janvier 2024, la sécurité sanitaire des aliments relève de la DGAL.", explain:"Téléicare → DGCCRF / DGAL."},
+        {type:"qroc", q:"Qui gère la nutrivigilance ?", answer:"L'ANSES : elle gère le signalement des effets indésirables liés aux compléments alimentaires.", explain:"Nutrivigilance = ANSES."},
+        {type:"qcm", q:"Le CBD alimentaire ingérable est-il autorisé en France depuis mai 2026 ?", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux — il est interdit depuis le 15 mai 2026"}], correct:["b"], explain:"Les compléments/denrées au CBD ingérables sont interdits (règlement Novel Food) ; seuls les usages non alimentaires restent autorisés."},
+        {type:"qcm", q:"Un complément alimentaire peut-il se substituer à un repas ?", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux — il ne fait que compléter le régime alimentaire normal"}], correct:["b"], explain:"Il complète, ne remplace jamais une alimentation variée."},
+        {type:"qroc", q:"Quelle est la définition réglementaire d'un produit cosmétique ?", answer:"Toute substance ou mélange destiné à être appliqué sur les parties superficielles du corps (peau, cheveux, ongles, lèvres…) pour les nettoyer, parfumer, protéger, maintenir en bon état, en modifier l'aspect ou corriger les odeurs corporelles. Règlement CE 1223/2009.", explain:"Application externe, sans visée thérapeutique."},
+        {type:"qcm", q:"Un produit cosmétique peut-il revendiquer des propriétés curatives s'il est efficace ?", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux — il serait alors requalifié en médicament"}], correct:["b"], explain:"Toute allégation thérapeutique fait basculer le produit dans le statut de médicament."},
+        {type:"qroc", q:"Qui surveille les produits cosmétiques en France ?", answer:"L'ANSM et la DGCCRF.", explain:"Surveillance du marché : ANSM + DGCCRF."},
+        {type:"qroc", q:"Quelles sont les six exigences avant la commercialisation d'un cosmétique ?", answer:"1) Désigner une personne responsable ; 2) constituer le DIP ; 3) respecter les BPF (ISO 22716) ; 4) notifier sur le portail CPNP ; 5) étiquetage conforme ; 6) déclaration d'établissement à l'ANSM.", explain:"Personne responsable + DIP + BPF + CPNP + étiquetage + déclaration."},
+        {type:"qroc", q:"Que signifie CMR et quelles sont les trois catégories ?", answer:"Cancérogène, Mutagène, toxique pour la Reproduction (règlement CLP). Catégorie 1A (preuves humaines), 1B (preuves animales), 2 (substance suspectée).", explain:"CMR classées par niveau de preuve/danger."},
+        {type:"qcm", q:"Les substances CMR de catégorie 1A/1B sont-elles interdites dans les cosmétiques, sauf dérogation exceptionnelle très encadrée ?", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Interdites par principe (Art. 15 du règlement 1223/2009), dérogation seulement si 4 conditions cumulatives + avis du CSSC."},
+        {type:"qcm", q:"Un nanomatériau doit-il être notifié au moins 6 mois avant sa mise sur le marché ?", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Notification à la Commission via le CPNP 6 mois avant, puis avis favorable du CSSC requis."},
+        {type:"qroc", q:"Qu'est-ce qu'un nanomatériau ?", answer:"Un matériau insoluble ou bio-persistant, intentionnellement fabriqué, dont une dimension est comprise entre 1 et 100 nanomètres.", explain:"Notification CPNP 6 mois avant mise sur le marché."},
+        {type:"qroc", q:"Qu'est-ce que la déclaration R-Nano (spécificité française) ?", answer:"Depuis le 1er janvier 2013, une déclaration annuelle à l'INERIS (site r-nano.fr) pour toute substance à l'état nanoparticulaire produite, importée ou distribuée, y compris dans les cosmétiques.", explain:"R-Nano = obligation française spécifique."},
+        {type:"qroc", q:"Que signifie le symbole PAO sur un cosmétique ?", answer:"Période Après Ouverture : un pictogramme (pot ouvert) suivi d'un nombre de mois (ex. 12M = 12 mois après ouverture).", explain:"Durée d'utilisation sûre après ouverture."},
+        {type:"qroc", q:"Combien de temps doit-on conserver le Dossier d'Information Produit (DIP) d'un cosmétique ?", answer:"10 ans après la dernière mise sur le marché du produit.", explain:"DIP conservé 10 ans."},
+        {type:"qroc", q:"Quelles sont les sanctions possibles en cas de non-conformité d'un cosmétique ?", answer:"Amende jusqu'à 30 000 € et 2 ans d'emprisonnement ; suspension ou interdiction de commercialisation ; retrait ou rappel des produits dangereux.", explain:"Sanctions pénales + mesures de police sanitaire."},
+        {type:"qroc", q:"Quels sont les six critères d'une allégation cosmétique conforme ?", answer:"Conformité à la loi, véracité, éléments probants (preuves), sincérité, équité, choix en connaissance de cause.", explain:"Une allégation ne doit jamais être thérapeutique ni trompeuse."}
+      ]
+    },
+    {
+      id: "iatrogalenique",
+      name: "Iatrogénie – Galénique – Pharmaco",
+      icon: "\u{1F48A}",
+      questions: [
+        {type:"qcm", q:"Quelle est la définition d'une forme galénique ?", options:[{k:"a",t:"Le conditionnement secondaire du médicament"},{k:"b",t:"Le conditionnement primaire du médicament"},{k:"c",t:"La présentation permettant l'administration du principe actif (PA + excipients)"}], correct:["c"], explain:"La forme galénique = l'aspect final du médicament (comprimé, sirop…) associant principe actif et excipients."},
+        {type:"qcm", q:"Quels sont les rôles d'un conditionnement secondaire (la boîte) ?", options:[{k:"a",t:"Protéger la forme galénique"},{k:"b",t:"Informer le patient (mentions légales)"},{k:"c",t:"Identifier le médicament"},{k:"d",t:"Assurer sa conservation"}], correct:["b","c"], explain:"La boîte (conditionnement secondaire) informe et identifie. La protection et la conservation relèvent surtout du conditionnement primaire (blister)."},
+        {type:"qroc", q:"Que signifie EEN ?", answer:"Excipient à Effet Notoire.", explain:"Un EEN peut entraîner des précautions d'emploi (ex. lactose, gluten)."},
+        {type:"qcm", q:"De quoi dépend le choix de la forme galénique ?", options:[{k:"a",t:"Les propriétés physicochimiques du médicament"},{k:"b",t:"L'âge du patient"},{k:"c",t:"La gravité de la pathologie à traiter"}], correct:["a","b","c"], explain:"Le choix intègre le principe actif, le patient (âge) et la situation clinique (urgence, gravité)."},
+        {type:"qcm", q:"Les excipients d'un médicament :", options:[{k:"a",t:"N'exercent pas d'activité pharmacologique"},{k:"b",t:"Sont inertes par rapport au principe actif"},{k:"c",t:"Assurent la réalisation technique de la forme galénique"}], correct:["a","b","c"], explain:"Les excipients sont sans activité propre mais indispensables à la fabrication et à la prise du médicament."},
+        {type:"qcm", q:"La forme galénique LP (Libération Prolongée) d'un comprimé :", options:[{k:"a",t:"Permet de prolonger la durée d'action du principe actif"},{k:"b",t:"Facilite l'observance en réduisant le nombre de prises"},{k:"c",t:"Augmente les effets indésirables"}], correct:["a","b"], explain:"La LP étale la libération dans le temps : moins de prises, meilleure observance."},
+        {type:"qcm", q:"La forme galénique gastro-résistante d'un comprimé :", options:[{k:"a",t:"Permet de différer la libération du PA dans l'intestin"},{k:"b",t:"Facilite la dégradation du médicament dans l'estomac"},{k:"c",t:"Permet d'accélérer la libération du PA dans l'estomac"}], correct:["a"], explain:"L'enrobage gastro-résistant protège le PA de l'estomac : libération dans l'intestin."},
+        {type:"qcm", q:"La forme galénique Patch :", options:[{k:"a",t:"Est adaptée à la voie transcutanée"},{k:"b",t:"Ne facilite pas l'observance"},{k:"c",t:"Est adaptée à la voie orale"}], correct:["a"], explain:"Le patch délivre le PA à travers la peau (voie transcutanée) et facilite l'observance."},
+        {type:"qcm", q:"La voie d'administration EN URGENCE est la voie :", options:[{k:"a",t:"SC (sous-cutanée)"},{k:"b",t:"IM (intramusculaire)"},{k:"c",t:"IV (intraveineuse)"}], correct:["c"], explain:"La voie IV donne un effet immédiat (100 % du PA directement dans le sang) : c'est la voie de l'urgence."},
+        {type:"qcm", q:"Cochez les 2 formes galéniques adaptées à la voie oculaire :", options:[{k:"a",t:"Collutoire"},{k:"b",t:"Collyre"},{k:"c",t:"Gouttes buvables"},{k:"d",t:"Pommade ophtalmique"}], correct:["b","d"], explain:"Voie oculaire : collyre et pommade ophtalmique. Le collutoire est bucco-pharyngé."},
+        {type:"qcm", q:"Cochez les 2 formes galéniques adaptées à la voie sublinguale :", options:[{k:"a",t:"Comprimé (classique)"},{k:"b",t:"Comprimé Lyoc"},{k:"c",t:"Comprimé orodispersible"}], correct:["b","c"], explain:"Lyoc et orodispersible fondent sous la langue (absorption sublinguale rapide)."},
+        {type:"qcm", q:"Cochez la forme galénique adaptée à la voie bucco-pharyngée :", options:[{k:"a",t:"Collutoire"},{k:"b",t:"Collyre"},{k:"c",t:"Gouttes buvables"},{k:"d",t:"Pommade ophtalmique"}], correct:["a"], explain:"Le collutoire est pulvérisé dans la bouche/gorge (voie bucco-pharyngée)."},
+        {type:"qcm", q:"La forme galénique effervescente permet de :", options:[{k:"a",t:"Augmenter la vitesse de libération du PA dans l'intestin"},{k:"b",t:"Faciliter la dégradation du médicament dans l'estomac"},{k:"c",t:"Raccourcir la phase d'absorption du PA"}], correct:["a","c"], explain:"La dissolution préalable accélère la libération et l'absorption du principe actif."},
+        {type:"qcm", q:"Quelle(s) voie(s) est/sont une voie systémique (générale) ?", options:[{k:"a",t:"Voie auriculaire"},{k:"b",t:"Voie perlinguale"},{k:"c",t:"Voie cutanée"},{k:"d",t:"Voie orale"}], correct:["b","d"], explain:"Voie systémique = le PA passe dans la circulation générale (perlinguale, orale). Auriculaire et cutanée sont surtout locales."},
+        {type:"qcm", q:"Synonymes de la voie orale :", options:[{k:"a",t:"Voie parentérale"},{k:"b",t:"Voie entérale"},{k:"c",t:"Voie per os"}], correct:["b","c"], explain:"Voie orale = entérale = per os. La voie parentérale = injectable (hors tube digestif)."},
+        {type:"qcm", q:"Une suspension est :", options:[{k:"a",t:"Un mélange homogène"},{k:"b",t:"Un mélange hétérogène avec des particules solides"},{k:"c",t:"Un gaz dans un liquide"},{k:"d",t:"Une poudre"}], correct:["b"], explain:"Une suspension = particules solides dispersées dans un liquide (à agiter avant emploi)."},
+        {type:"qcm", q:"Quel est le rôle principal d'un enrobage ?", options:[{k:"a",t:"Donner de la couleur"},{k:"b",t:"Protéger le principe actif ou faciliter la prise"},{k:"c",t:"Augmenter la dose"},{k:"d",t:"Remplacer l'excipient"}], correct:["b"], explain:"L'enrobage protège le PA (lumière, humidité, estomac) et facilite la déglutition."},
+        {type:"qcm", q:"Une forme injectable est administrée :", options:[{k:"a",t:"Par voie orale"},{k:"b",t:"Par voie cutanée"},{k:"c",t:"Par voie parentérale"},{k:"d",t:"Par inhalation"}], correct:["c"], explain:"L'injectable emprunte la voie parentérale (SC, IM, IV…)."},
+        {type:"qcm", q:"Quel(s) professionnel(s) doit(vent) déclarer les effets indésirables (EI) ?", options:[{k:"a",t:"Le pharmacien"},{k:"b",t:"Le radiologue"},{k:"c",t:"Le biologiste"},{k:"d",t:"Le chirurgien"}], correct:["a","b","c","d"], explain:"Tout professionnel de santé doit déclarer les effets indésirables (déclaration obligatoire)."},
+        {type:"qcm", q:"Quelle action fait partie des missions de la pharmacovigilance ?", options:[{k:"a",t:"Évaluer la qualité des soins infirmiers"},{k:"b",t:"Réaliser les prescriptions hospitalières"},{k:"c",t:"Contrôler les stocks de médicaments"},{k:"d",t:"Analyser les effets indésirables pour réduire les risques"}], correct:["d"], explain:"La pharmacovigilance surveille et analyse les EI des médicaments après commercialisation."},
+        {type:"qcm", q:"Quel est le rôle principal des Centres Régionaux de Pharmacovigilance (CRPV) ?", options:[{k:"a",t:"Contrôler les pharmacies"},{k:"b",t:"Former les médecins à la prescription"},{k:"c",t:"Distribuer les médicaments"},{k:"d",t:"Collecter et analyser les effets indésirables"}], correct:["d"], explain:"Les CRPV recueillent et analysent les déclarations d'EI de leur région."},
+        {type:"qcm", q:"Que doit faire un médecin face à un symptôme nouveau inexpliqué ?", options:[{k:"a",t:"Attendre l'évolution naturelle"},{k:"b",t:"Changer de médicament sans vérifier"},{k:"c",t:"Penser à un effet indésirable et le déclarer au CRPV"}], correct:["c"], explain:"Tout symptôme inexpliqué doit faire évoquer un EI médicamenteux et être déclaré."},
+        {type:"qcm", q:"Qu'est-ce que l'iatrogénèse ?", options:[{k:"a",t:"Une complication naturelle de la maladie"},{k:"b",t:"Un dommage causé par un acte médical ou un médicament"},{k:"c",t:"Une interaction entre 2 maladies"},{k:"d",t:"Une erreur de diagnostic"}], correct:["b"], explain:"L'iatrogénie = tout dommage lié aux soins (acte médical, médicament)."},
+        {type:"qroc", q:"Combien de CRPV existe-t-il en France ?", answer:"31 CRPV.", explain:"31 centres régionaux de pharmacovigilance."},
+        {type:"qroc", q:"Que désigne le « R » de CRPV ?", answer:"Régional (Centre Régional de Pharmacovigilance).", explain:"Un CRPV couvre une région."},
+        {type:"qroc", q:"Quelle autorité supervise les CRPV au niveau national ?", answer:"L'ANSM.", explain:"L'ANSM coordonne le réseau national de pharmacovigilance."},
+        {type:"qcm", q:"Quelles sont les causes de la iatrogénie médicamenteuse ?", options:[{k:"a",t:"Les effets indésirables (EI)"},{k:"b",t:"Les interactions médicamenteuses (IAM)"},{k:"c",t:"L'automédication"}], correct:["a","b","c"], explain:"EI, interactions et automédication sont des causes majeures ; la mauvaise observance en est une autre."},
+        {type:"qcm", q:"Quelle est la durée de délivrance d'un médicament lors d'un conseil (sans ordonnance) ?", options:[{k:"a",t:"6 jours"},{k:"b",t:"7 jours (au-delà : avis médical)"},{k:"c",t:"8 jours"}], correct:["b"], explain:"Un conseil couvre 7 jours maximum ; au-delà, un avis médical est nécessaire."},
+        {type:"qcm", q:"Les effets indésirables sont-ils à déclaration obligatoire pour les patients ?", options:[{k:"a",t:"Oui"},{k:"b",t:"Non"}], correct:["b"], explain:"Les patients PEUVENT déclarer (portail signalement-sante.gouv.fr) mais ne sont pas obligés ; l'obligation vise les professionnels de santé."},
+        {type:"qcm", q:"Combien de niveaux d'interactions médicamenteuses existe-t-il ?", options:[{k:"a",t:"2"},{k:"b",t:"3"},{k:"c",t:"4"}], correct:["c"], explain:"4 niveaux : Contre-indication (CI), association déconseillée, précaution d'emploi (PE), à prendre en compte."},
+        {type:"qcm", q:"Concernant les interactions médicamenteuses, cochez la définition exacte :", options:[{k:"a",t:"Toute modification, in vitro, des effets d'un médicament par un autre"},{k:"b",t:"Toute modification (qualitative et/ou quantitative), in vivo, des effets d'un médicament par un autre"}], correct:["b"], explain:"L'interaction se produit in vivo (dans l'organisme), pas in vitro."},
+        {type:"qcm", q:"Concernant la pharmacovigilance, cochez la réponse exacte :", options:[{k:"a",t:"Les patients ou associations de patients ne peuvent pas déclarer les EI"},{k:"b",t:"Le Délégué Pharmaceutique contribue au bon usage en rappelant les caractéristiques essentielles du médicament aux équipes officinales"}], correct:["b"], explain:"Les patients peuvent déclarer, et le délégué participe au bon usage du médicament."},
+        {type:"qcm", q:"« La iatrogénie médicamenteuse n'est pas un problème majeur de santé publique. »", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["b"], explain:"Faux : la iatrogénie médicamenteuse est au contraire un problème majeur de santé publique (nombreuses hospitalisations évitables)."}
+      ]
+    },
+    {
+      id: "generique",
+      name: "Générique",
+      icon: "\u{1F501}",
+      questions: [
+        {type:"qroc", q:"Qu'est-ce qu'un médicament générique ?", answer:"Un médicament identique ou équivalent à une spécialité de référence (princeps) dont le brevet est tombé dans le domaine public : même composition qualitative et quantitative en principe(s) actif(s), même forme pharmaceutique et même efficacité thérapeutique (même biodisponibilité).", explain:"Il est vendu sous DCI ou sous un nouveau nom commercial."},
+        {type:"qcm", q:"Par rapport au princeps, un médicament générique a :", options:[{k:"a",t:"La même composition qualitative et quantitative en principe(s) actif(s)"},{k:"b",t:"La même forme pharmaceutique"},{k:"c",t:"La même efficacité thérapeutique (même biodisponibilité)"},{k:"d",t:"Obligatoirement le même nom commercial"}], correct:["a","b","c"], explain:"Le générique est identique en PA, forme et efficacité ; il peut avoir un nom différent (ou sa DCI)."},
+        {type:"qcm", q:"Quelles sont les seules différences possibles entre un générique et son princeps ?", options:[{k:"a",t:"Le(s) principe(s) actif(s)"},{k:"b",t:"Les excipients"},{k:"c",t:"La présentation (couleur, forme, goût)"},{k:"d",t:"Le nom commercial"}], correct:["b","c","d"], explain:"Le principe actif est identique ; seuls les excipients, la présentation et le nom peuvent différer."},
+        {type:"qroc", q:"Que signifie DCI ?", answer:"Dénomination Commune Internationale : le nom chimique de la substance active.", explain:"Le générique est produit sous sa DCI ou sous un nouveau nom commercial."},
+        {type:"qroc", q:"Qu'est-ce que la bioéquivalence ?", answer:"L'équivalence de la biodisponibilité entre le générique et le princeps : la vitesse et l'intensité d'absorption du principe actif sont équivalentes, donc l'efficacité est identique.", explain:"La bioéquivalence est démontrée dans le dossier d'AMM."},
+        {type:"qroc", q:"Qu'est-ce que la biodisponibilité ?", answer:"La quantité de principe actif qui atteint la circulation sanguine et la vitesse de ce processus (pharmacocinétique).", explain:"Elle décrit comment le PA devient disponible pour agir."},
+        {type:"qcm", q:"Un excipient :", options:[{k:"a",t:"Est une substance sans activité pharmacologique"},{k:"b",t:"Joue un rôle dans l'absorption, la stabilité et l'acceptabilité (couleur, goût)"},{k:"c",t:"Peut différer entre le générique et le princeps"},{k:"d",t:"Est le principe actif du médicament"}], correct:["a","b","c"], explain:"L'excipient n'est pas le PA ; il peut différer entre générique et princeps (attention aux excipients à effet notoire)."},
+        {type:"qroc", q:"Qu'est-ce que l'AMM et sur quoi repose son dossier ?", answer:"L'Autorisation de Mise sur le Marché : elle repose sur un dossier de qualité pharmaceutique, d'efficacité et de sécurité. Elle est accompagnée du RCP, de la notice et de l'étiquetage.", explain:"Sans AMM, pas de commercialisation."},
+        {type:"qcm", q:"L'accès au marché remboursé d'un médicament passe par un double circuit :", options:[{k:"a",t:"La HAS (Commission de la Transparence) évalue le SMR et l'ASMR"},{k:"b",t:"Le CEPS négocie le prix avec le laboratoire"},{k:"c",t:"L'INPI valide le remboursement"},{k:"d",t:"La DGCCRF fixe le taux de TVA"}], correct:["a","b"], explain:"Après l'AMM (ANSM), le remboursement passe par la HAS (SMR/ASMR) puis le CEPS (prix)."},
+        {type:"qroc", q:"Qu'est-ce que le répertoire des médicaments génériques ?", answer:"L'outil sur lequel le pharmacien se base pour substituer. Les spécialités y sont classées par groupes (chaque groupe = 1 spécialité de référence + ses génériques) ; on ne peut substituer qu'entre spécialités d'un même groupe.", explain:"Géré par l'ANSM, en lien avec la base de données publique des médicaments."},
+        {type:"qcm", q:"Concernant la substitution générique :", options:[{k:"a",t:"Elle doit être systématiquement proposée pour les médicaments inscrits au répertoire"},{k:"b",t:"Elle est impossible si l'ordonnance porte la mention « non substituable »"},{k:"c",t:"Le pharmacien est obligé de substituer"},{k:"d",t:"Elle n'est autorisée qu'entre spécialités d'un même groupe"}], correct:["a","b","d"], explain:"Il y a obligation de PROPOSER la substitution, mais pas de substituer ; « non substituable » l'interdit."},
+        {type:"qroc", q:"Que signifie la mention « non substituable » sur une ordonnance ?", answer:"Le pharmacien ne peut pas remplacer le princeps prescrit par un générique.", explain:"Rappel : le pharmacien a l'obligation de proposer la substitution, mais pas de substituer."},
+        {type:"qroc", q:"Que signifie TFR ?", answer:"Tarif Forfaitaire de Responsabilité : un tarif de référence unique servant de base au remboursement de certains groupes (princeps + génériques).", explain:"Environ 1/4 des spécialités remboursables sont concernées."},
+        {type:"qcm", q:"Le Tarif Forfaitaire de Responsabilité (TFR) :", options:[{k:"a",t:"Est calculé à partir du générique le moins cher du groupe"},{k:"b",t:"Concerne environ 1/4 des spécialités remboursables"},{k:"c",t:"Est mis en place quand le taux de substitution est jugé trop faible"},{k:"d",t:"Oblige le laboratoire du princeps à s'aligner sur ce tarif"}], correct:["a","b","c"], explain:"S'aligner sur le TFR n'est pas obligatoire ; sinon le patient paie la différence et perd le tiers payant."},
+        {type:"qroc", q:"Qu'est-ce qu'un médicament hybride ?", answer:"Un médicament contenant le même principe actif que sa référence mais ne remplissant pas la définition stricte du générique (bioéquivalence non démontrée par études conventionnelles, ou différence de dosage, forme, indication ou voie d'administration). Il nécessite des études cliniques/précliniques complémentaires.", explain:"Ex. une forme topique, un nouveau dosage ou une nouvelle voie facilitant la prise."},
+        {type:"qcm", q:"Un médicament hybride :", options:[{k:"a",t:"Contient le même principe actif que la référence"},{k:"b",t:"Est un générique au sens strict"},{k:"c",t:"Peut différer par le dosage, la forme, l'indication ou la voie d'administration"},{k:"d",t:"Nécessite des études cliniques/précliniques pour son AMM"}], correct:["a","c","d"], explain:"L'hybride n'est pas un générique strict : il nécessite des données supplémentaires, contrairement au générique."},
+        {type:"qroc", q:"Qu'est-ce qu'un médicament biologique ?", answer:"Un médicament fabriqué à partir d'organismes vivants (cellules ou tissus vivants).", explain:"On distingue les médicaments chimiques (classiques) et biologiques."},
+        {type:"qroc", q:"Qu'est-ce qu'un médicament biosimilaire ?", answer:"Un médicament biologique (issu du vivant) similaire (quasi-identique) à un médicament biologique de référence (le « bioréférent ») dont le brevet est tombé dans le domaine public.", explain:"Le terme de référence est « bioréférent », et non « princeps »."},
+        {type:"qcm", q:"Un médicament biosimilaire :", options:[{k:"a",t:"Est un médicament biologique (issu du vivant)"},{k:"b",t:"Est similaire à un médicament biologique de référence (bioréférent)"},{k:"c",t:"A un « princeps » comme référence"},{k:"d",t:"Est commercialisé après la chute du brevet du bioréférent"}], correct:["a","b","d"], explain:"Piège : la référence d'un biosimilaire s'appelle « bioréférent », pas « princeps »."},
+        {type:"qcm", q:"Le médicament biosimilaire est identique à son bioréférent sur :", options:[{k:"a",t:"La composition qualitative et quantitative en substance active"},{k:"b",t:"La biodisponibilité"},{k:"c",t:"La qualité, la sécurité et l'efficacité"},{k:"d",t:"Le nom de marque et la présentation"}], correct:["a","b","c"], explain:"Il diffère sur le prix, le nom de marque et la présentation, et n'est pas strictement identique (variabilité de fabrication)."},
+        {type:"qroc", q:"Qu'est-ce que l'immunogénicité (médicaments biologiques) ?", answer:"La capacité d'un médicament à induire une réponse immunitaire de l'organisme, pouvant neutraliser son activité, réduire son efficacité ou causer un effet indésirable (rare).", explain:"Elle fait l'objet d'une surveillance supplémentaire après commercialisation."},
+        {type:"qroc", q:"Comment reconnaît-on un médicament sous « surveillance supplémentaire » ?", answer:"Par un triangle noir inversé figurant dans le RCP et la notice.", explain:"Concerne notamment les médicaments biologiques (suivi de l'immunogénicité)."},
+        {type:"qcm", q:"La substitution des médicaments biosimilaires :", options:[{k:"a",t:"Est possible pour tous les biosimilaires"},{k:"b",t:"N'est possible que pour certains groupes biologiques similaires figurant sur une liste"},{k:"c",t:"Suit le même principe de groupes (référence + similaires) que les génériques"}], correct:["b","c"], explain:"Seuls certains groupes biologiques similaires sont substituables (liste réglementaire)."},
+        {type:"qcm", q:"Concernant les remises sur factures (accordées à l'officine) :", options:[{k:"a",t:"Générique remboursé : jusqu'à 40 %"},{k:"b",t:"Princeps de marque / non-générique remboursé : jusqu'à 2,5 %"},{k:"c",t:"Biosimilaire : jusqu'à 20 %"},{k:"d",t:"Produits OTC / conseil : remises libres"}], correct:["a","b","c","d"], explain:"Génériques 40 %, biosimilaires 20 %, princeps remboursés 2,5 %, OTC libres."},
+        {type:"qroc", q:"Quel est le taux de remise maximal sur facture pour un générique remboursé ?", answer:"Jusqu'à 40 %.", explain:"Contre 2,5 % pour un princeps remboursé et 20 % pour un biosimilaire ; les produits de conseil (OTC) ont des remises libres."}
+      ]
+    },
+    {
+      id: "pharmacologie",
+      name: "Pharmacologie",
+      icon: "\u{1F9EA}",
+      questions: [
+        {type:"qcm", q:"[Absorption] Comment s'appelle la branche de la pharmacologie qui étudie le devenir des médicaments dans l'organisme ?", options:[{k:"a",t:"Pharmacocinétique"},{k:"b",t:"Pharmacodynamie"},{k:"c",t:"Pharmacovigilance"}], correct:["a"], explain:"La pharmacocinétique = ce que l'organisme fait au médicament (ADME). La pharmacodynamie = ce que le médicament fait à l'organisme."},
+        {type:"qcm", q:"[Absorption] Quel est l'ordre des 4 phases de la pharmacocinétique ?", options:[{k:"a",t:"ADME"},{k:"b",t:"AEMD"},{k:"c",t:"DAME"}], correct:["a"], explain:"ADME : Absorption, Distribution, Métabolisation, Élimination."},
+        {type:"qcm", q:"[Absorption] Indiquez les 2 voies d'administration dites directes ou immédiates :", options:[{k:"a",t:"Orale"},{k:"b",t:"IV"},{k:"c",t:"IM"}], correct:["b","c"], explain:"IV et IM sont des voies directes (le PA rejoint rapidement la circulation). La voie orale est indirecte."},
+        {type:"qcm", q:"[Absorption] Indiquez la voie dite systémique ou générale :", options:[{k:"a",t:"Voie orale"},{k:"b",t:"Voie cutanée"},{k:"c",t:"Voie IV"}], correct:["c"], explain:"La voie IV délivre le principe actif directement dans la circulation générale (biodisponibilité 100 %)."},
+        {type:"qcm", q:"[Absorption] Synonymes de la voie orale :", options:[{k:"a",t:"Voie parentérale"},{k:"b",t:"Voie entérale"},{k:"c",t:"Voie per os"}], correct:["b","c"], explain:"Voie orale = entérale = per os. La voie parentérale = injectable."},
+        {type:"qcm", q:"[Absorption] Synonymes de la voie IV :", options:[{k:"a",t:"Entérale"},{k:"b",t:"Indirecte"},{k:"c",t:"Parentérale"}], correct:["c"], explain:"La voie IV est parentérale (hors tube digestif) et directe."},
+        {type:"qcm", q:"[Absorption] Que signifie IM ?", options:[{k:"a",t:"Intramuros"},{k:"b",t:"Intra-musculaire"}], correct:["b"], explain:"IM = intra-musculaire."},
+        {type:"qcm", q:"[Absorption] Que signifie SC ?", options:[{k:"a",t:"Sous-cutané"},{k:"b",t:"Sous-carpien"}], correct:["a"], explain:"SC = sous-cutané."},
+        {type:"qcm", q:"[Absorption] Quel est le site d'absorption pour la voie IM ?", options:[{k:"a",t:"Muqueuse"},{k:"b",t:"Muscle"},{k:"c",t:"Peau"}], correct:["b"], explain:"La voie IM libère le PA dans le muscle, richement vascularisé."},
+        {type:"qcm", q:"[Absorption] Quel est le site d'absorption pour un médicament administré sous la langue ?", options:[{k:"a",t:"Muqueuse nasale"},{k:"b",t:"Muqueuse sublinguale"},{k:"c",t:"Muqueuse digestive"}], correct:["b"], explain:"La voie sublinguale permet une absorption rapide et évite le 1er passage hépatique."},
+        {type:"qcm", q:"[Absorption] Les 2 zones d'absorption privilégiées pour la voie orale sont :", options:[{k:"a",t:"Estomac"},{k:"b",t:"Duodénum"},{k:"c",t:"Intestin grêle"}], correct:["b","c"], explain:"L'absorption se fait surtout au niveau du duodénum et de l'intestin grêle (grande surface)."},
+        {type:"qcm", q:"[Absorption] Dans quelle phase parle-t-on de biodisponibilité ?", options:[{k:"a",t:"Absorption"},{k:"b",t:"Distribution"},{k:"c",t:"Métabolisation"},{k:"d",t:"Élimination"}], correct:["a"], explain:"La biodisponibilité (fraction de dose qui atteint la circulation) caractérise la phase d'absorption."},
+        {type:"qcm", q:"[Absorption] Un médicament administré per os, en général :", options:[{k:"a",t:"Ne subit pas de 1er passage hépatique"},{k:"b",t:"Subit un effet de 1er passage hépatique"}], correct:["b"], explain:"Le sang du tube digestif passe par le foie avant la circulation générale : c'est le 1er passage hépatique."},
+        {type:"qcm", q:"[Absorption] Indiquez la voie d'administration utilisée en urgence :", options:[{k:"a",t:"Voie orale"},{k:"b",t:"Voie IV"}], correct:["b"], explain:"La voie IV a un effet immédiat (biodisponibilité 100 %)."},
+        {type:"qcm", q:"[Absorption] La Cmax correspond à :", options:[{k:"a",t:"La concentration prescrite en médicament"},{k:"b",t:"La concentration maximale de médicament absorbé"},{k:"c",t:"La concentration administrée par le patient"}], correct:["b"], explain:"Cmax = pic de concentration du médicament absorbé dans le sang."},
+        {type:"qcm", q:"[Absorption] Que détermine la Cmax ?", options:[{k:"a",t:"Le nombre de jours de traitement"},{k:"b",t:"Le nombre de prises journalières"},{k:"c",t:"La posologie"}], correct:["c"], explain:"La Cmax aide à déterminer la posologie (la dose)."},
+        {type:"qcm", q:"[Absorption] Quelle est la valeur de la biodisponibilité de la voie IV (en %) ?", options:[{k:"a",t:"50"},{k:"b",t:"75"},{k:"c",t:"100"}], correct:["c"], explain:"100 % : tout le principe actif rejoint directement la circulation."},
+        {type:"qcm", q:"[Absorption] Une biodisponibilité de 50 % pour un principe actif signifie que 50 % de la dose administrée est absorbée :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"La biodisponibilité est la fraction de dose qui atteint effectivement la circulation."},
+        {type:"qcm", q:"[Absorption] Quelle est la valeur de la biodisponibilité de la voie cutanée (en %) ?", options:[{k:"a",t:"0"},{k:"b",t:"25"},{k:"c",t:"50"}], correct:["a"], explain:"La voie cutanée est essentiellement locale : sa biodisponibilité systémique est proche de 0 %."},
+        {type:"qcm", q:"[Absorption] Pour quelle voie d'administration le Tmax est-il immédiat ?", options:[{k:"a",t:"Orale"},{k:"b",t:"Injectable"},{k:"c",t:"Cutanée"}], correct:["b"], explain:"Par voie injectable (IV), le pic est atteint immédiatement (Tmax immédiat)."},
+        {type:"qcm", q:"[Absorption] Quels facteurs identifient la phase d'absorption ?", options:[{k:"a",t:"Cmax, Tmax et demi-vie"},{k:"b",t:"Cmax, Tmax et volume de distribution"},{k:"c",t:"Cmax, Tmax et biodisponibilité"}], correct:["c"], explain:"La phase d'absorption est caractérisée par Cmax, Tmax et biodisponibilité."},
+        {type:"qcm", q:"[Absorption] De quel paramètre dépend la vitesse d'absorption pour la voie orale ?", options:[{k:"a",t:"La taille des particules"},{k:"b",t:"La vitesse d'élimination du patient"},{k:"c",t:"La vitesse de distribution plasmatique"}], correct:["a"], explain:"Plus les particules sont petites, plus l'absorption est rapide."},
+        {type:"qcm", q:"[Absorption] Pour un médicament de petite taille, sa diffusion dans les milieux biologiques se fait :", options:[{k:"a",t:"Du milieu le moins concentré vers le plus concentré"},{k:"b",t:"Du milieu le plus concentré vers le moins concentré"}], correct:["b"], explain:"Diffusion passive : dans le sens du gradient (du plus concentré vers le moins concentré)."},
+        {type:"qcm", q:"[Absorption] Que détermine le Tmax ?", options:[{k:"a",t:"La posologie"},{k:"b",t:"Le nombre de prises"},{k:"c",t:"Le délai d'action du médicament pour chaque voie d'administration"}], correct:["c"], explain:"Le Tmax (temps pour atteindre Cmax) reflète le délai d'action."},
+        {type:"qcm", q:"[Absorption] Certains principes actifs ne sont pas absorbés par la muqueuse digestive, et cette modalité est voulue :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Ex. un traitement à action locale intestinale : on ne veut pas qu'il passe dans le sang."},
+        {type:"qcm", q:"[Absorption] L'absorption d'un principe actif peut être influencée par :", options:[{k:"a",t:"La prise alimentaire concomitante"},{k:"b",t:"La fraction de PA liée aux protéines plasmatiques"},{k:"c",t:"La prise simultanée d'un autre médicament"}], correct:["a","c"], explain:"Les aliments et d'autres médicaments pris en même temps peuvent modifier l'absorption. La fixation aux protéines concerne la phase de distribution."},
+        {type:"qcm", q:"[Distribution] Pour un médicament absorbé par voie orale, en général :", options:[{k:"a",t:"Il est absorbé au niveau de la muqueuse gastrique"},{k:"b",t:"Il ne traverse pas la barrière intestinale"},{k:"c",t:"Il franchit la barrière intestinale et atteint la circulation sanguine"}], correct:["c"], explain:"Le PA traverse la paroi intestinale puis rejoint la circulation."},
+        {type:"qcm", q:"[Distribution] La distribution du médicament administré par voie orale :", options:[{k:"a",t:"Se produit après la phase d'absorption"},{k:"b",t:"Se produit après le 1er passage hépatique"},{k:"c",t:"A lieu une fois que le M a rejoint la circulation sanguine"}], correct:["a","b","c"], explain:"La distribution suit l'absorption et le 1er passage hépatique, une fois le PA dans le sang."},
+        {type:"qcm", q:"[Distribution] La distribution du médicament prend en compte :", options:[{k:"a",t:"La distribution dans le sang"},{k:"b",t:"La distribution dans les tissus"}], correct:["a","b"], explain:"On distingue la distribution plasmatique (sang) et tissulaire."},
+        {type:"qcm", q:"[Distribution] La distribution plasmatique d'un médicament est permise grâce à :", options:[{k:"a",t:"La présence de protéines dans le plasma"},{k:"b",t:"La présence d'enzymes"}], correct:["a"], explain:"Le PA se lie aux protéines plasmatiques (surtout l'albumine) pour circuler."},
+        {type:"qcm", q:"[Distribution] Dans le compartiment plasmatique, le médicament circule librement ou est plus ou moins fixé sur l'albumine :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Il existe une fraction libre et une fraction liée à l'albumine."},
+        {type:"qcm", q:"[Distribution] La fixation du médicament à l'albumine est spécifique de chaque patient :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["b"], explain:"Elle est spécifique de chaque molécule, pas du patient."},
+        {type:"qcm", q:"[Distribution] La fixation du médicament à l'albumine est spécifique de chaque molécule :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Chaque molécule a son propre % de fixation aux protéines plasmatiques."},
+        {type:"qcm", q:"[Distribution] La fraction de médicament absorbé qui se fixe sur l'albumine se nomme :", options:[{k:"a",t:"La fraction liée"},{k:"b",t:"La fraction libre"},{k:"c",t:"La forme de réserve ou de stockage du médicament"}], correct:["a","c"], explain:"La fraction liée sert de réserve (inactive) ; elle se libère au fur et à mesure."},
+        {type:"qcm", q:"[Distribution] La fraction de médicament absorbé qui ne se fixe pas sur l'albumine se nomme :", options:[{k:"a",t:"La fraction liée"},{k:"b",t:"La fraction libre"},{k:"c",t:"La fraction active"},{k:"d",t:"La fraction immédiatement diffusible"}], correct:["b","c","d"], explain:"La fraction libre est active et diffuse immédiatement vers les tissus."},
+        {type:"qcm", q:"[Distribution] Chaque médicament a un % de fixation aux protéines plasmatiques qui lui est spécifique :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Ce % est propre à chaque molécule."},
+        {type:"qcm", q:"[Distribution] Deux médicaments pris en même temps par voie orale, avec un % de fixation aux protéines proche, peuvent entrer en compétition pour se fixer à l'albumine :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"La compétition libère l'un des deux : sa fraction libre (active) augmente → risque d'interaction."},
+        {type:"qcm", q:"[Distribution] Seule la forme libre du médicament dans le plasma diffuse vers les tissus :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Seule la fraction libre peut quitter le sang vers les tissus."},
+        {type:"qcm", q:"[Distribution] Seule la forme libre du médicament dans le plasma qui diffuse vers les tissus est active :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"La fraction liée est inactive ; seule la fraction libre agit."},
+        {type:"qcm", q:"[Distribution] Indiquez la bonne proposition :", options:[{k:"a",t:"La liaison aux protéines plasmatiques diffère d'un patient à l'autre"},{k:"b",t:"Plus le % de fixation aux protéines est grand, plus le médicament est lié"},{k:"c",t:"Plus le % de fixation est petit, plus le médicament est libre"}], correct:["b"], explain:"La fixation est propre à la molécule ; un % élevé signifie une plus grande fraction liée (de réserve)."},
+        {type:"qcm", q:"[Distribution] La distribution du médicament vers les tissus se fait :", options:[{k:"a",t:"Depuis le compartiment plasmatique"},{k:"b",t:"Par diffusion à travers une membrane"},{k:"c",t:"À partir de la fraction liée aux protéines plasmatiques"}], correct:["a","b"], explain:"Le PA quitte le plasma et traverse les membranes. Seule la fraction libre (pas la liée) diffuse."},
+        {type:"qcm", q:"[Distribution] Les membranes physiologiques sont des barrières :", options:[{k:"a",t:"Hydrophiles"},{k:"b",t:"Lipophiles"}], correct:["b"], explain:"Les membranes sont lipidiques : les molécules liposolubles les traversent plus facilement."},
+        {type:"qcm", q:"[Distribution] Les tissus peu vascularisés sont :", options:[{k:"a",t:"La dent"},{k:"b",t:"Le cœur"},{k:"c",t:"Le foie"},{k:"d",t:"Les cheveux"}], correct:["a","d"], explain:"Dents et cheveux sont peu vascularisés (mauvaise diffusion). Cœur et foie sont très vascularisés."},
+        {type:"qcm", q:"[Distribution] La diffusion du médicament vers les tissus dépend de sa concentration plasmatique :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Plus la concentration plasmatique est élevée, plus la diffusion vers les tissus est importante."},
+        {type:"qcm", q:"[Distribution] Indiquez les facteurs qui modifient la diffusion d'un médicament :", options:[{k:"a",t:"La prise associée d'aliments"},{k:"b",t:"La taille du médicament"},{k:"c",t:"La concentration plasmatique"},{k:"d",t:"La prise associée d'autres médicaments"}], correct:["b","c"], explain:"La diffusion dépend de la taille de la molécule et de la concentration plasmatique."},
+        {type:"qcm", q:"[Biotransformation] Comment s'appelle la 3ème étape de la pharmacocinétique ?", options:[{k:"a",t:"Métabolisation"},{k:"b",t:"Diffusion"},{k:"c",t:"Biotransformation"}], correct:["a","c"], explain:"Métabolisation et biotransformation sont synonymes (3ème étape, le « M » de ADME)."},
+        {type:"qcm", q:"[Biotransformation] La transformation des médicaments s'effectue principalement dans :", options:[{k:"a",t:"Le cerveau"},{k:"b",t:"Le poumon"},{k:"c",t:"Le foie"}], correct:["c"], explain:"Le foie est le principal organe de métabolisation des médicaments."},
+        {type:"qcm", q:"[Biotransformation] Les produits issus de la transformation du médicament sont des produits :", options:[{k:"a",t:"Inactifs"},{k:"b",t:"Actifs"},{k:"c",t:"Toxiques"}], correct:["a","b","c"], explain:"Les métabolites peuvent être inactifs, actifs ou toxiques."},
+        {type:"qcm", q:"[Biotransformation] Les produits de la biotransformation s'appellent des :", options:[{k:"a",t:"Dérivés"},{k:"b",t:"Métabolismes"},{k:"c",t:"Métabolites"}], correct:["c"], explain:"Les produits de la métabolisation sont les métabolites."},
+        {type:"qcm", q:"[Biotransformation] Les enzymes accélèrent (« boostent ») les réactions chimiques :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Les enzymes sont des catalyseurs : elles accélèrent les réactions."},
+        {type:"qcm", q:"[Biotransformation] La métabolisation n'intéresse que la fraction de médicament libre :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Seule la fraction libre est disponible pour être métabolisée."},
+        {type:"qcm", q:"[Biotransformation] Les produits de transformation hépatique diffèrent d'un patient à l'autre :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"L'équipement enzymatique varie d'un individu à l'autre (génétique, âge, pathologies)."},
+        {type:"qcm", q:"[Biotransformation] Le cytochrome P450 :", options:[{k:"a",t:"Est un ensemble d'enzymes"},{k:"b",t:"Participe à la biotransformation des médicaments par le foie"},{k:"c",t:"Ne participe pas à la biotransformation des médicaments"}], correct:["a","b"], explain:"Le cytochrome P450 est un ensemble d'enzymes hépatiques clés du métabolisme."},
+        {type:"qcm", q:"[Biotransformation] Le CYP 3A4 (enzymes hépatiques) dégrade environ :", options:[{k:"a",t:"25 % des principes actifs"},{k:"b",t:"50 % des principes actifs"},{k:"c",t:"75 % des principes actifs"}], correct:["a"], explain:"D'après ton corrigé : environ 25 % des principes actifs."},
+        {type:"qcm", q:"[Biotransformation] Un inhibiteur enzymatique :", options:[{k:"a",t:"Augmente l'activité des enzymes responsables de la métabolisation"},{k:"b",t:"Diminue l'activité des enzymes responsables de la métabolisation"},{k:"c",t:"Augmente les effets du médicament"},{k:"d",t:"Diminue les effets du médicament"}], correct:["b","c"], explain:"En freinant la métabolisation, le PA s'accumule → effets augmentés (risque de surdosage)."},
+        {type:"qcm", q:"[Biotransformation] Un inducteur enzymatique :", options:[{k:"a",t:"Augmente l'activité des enzymes responsables de la métabolisation"},{k:"b",t:"Diminue l'activité des enzymes responsables de la métabolisation"},{k:"c",t:"Augmente les effets du médicament"},{k:"d",t:"Diminue les effets du médicament"}], correct:["a","d"], explain:"En accélérant la métabolisation, le PA est éliminé plus vite → effets diminués."},
+        {type:"qcm", q:"[Biotransformation] Indiquez 3 inducteurs enzymatiques :", options:[{k:"a",t:"Jus de pamplemousse"},{k:"b",t:"Tabac"},{k:"c",t:"Oméprazole (antiulcéreux)"},{k:"d",t:"Millepertuis"}], correct:["a","b","c"], explain:"⚠️ Réponses d'après TON corrigé. En pharmacologie classique, c'est plutôt l'inverse : jus de pamplemousse = inhibiteur, millepertuis = inducteur. À confirmer avec ton formateur."},
+        {type:"qcm", q:"[Biotransformation] Indiquez 1 inhibiteur enzymatique :", options:[{k:"a",t:"Jus de pamplemousse"},{k:"b",t:"Oméprazole (antiulcéreux)"},{k:"c",t:"Millepertuis"}], correct:["c"], explain:"⚠️ Réponse d'après TON corrigé. Classiquement, le millepertuis est un inducteur et le jus de pamplemousse un inhibiteur. À vérifier avec ton formateur."},
+        {type:"qcm", q:"[Biotransformation] L'alcool, selon les doses, peut être :", options:[{k:"a",t:"Inhibiteur enzymatique"},{k:"b",t:"Inducteur enzymatique"}], correct:["a","b"], explain:"L'alcool en prise aiguë est inhibiteur ; en consommation chronique, il devient inducteur."},
+        {type:"qcm", q:"[Biotransformation] La prise d'alcool pendant un traitement peut majorer les effets sédatifs d'un autre traitement pris en même temps :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"L'alcool potentialise les effets sédatifs (somnolence, dépression du système nerveux)."},
+        {type:"qcm", q:"[Biotransformation] Le risque pour la conduite est indiqué sur l'emballage du médicament sous la forme d'un :", options:[{k:"a",t:"Pictogramme"},{k:"b",t:"Idéogramme"}], correct:["a"], explain:"Un pictogramme (triangle de niveau 1 à 3) signale le risque pour la conduite."},
+        {type:"qcm", q:"[Élimination] La 4ème étape de la pharmacocinétique s'effectue principalement dans le foie :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["b"], explain:"L'élimination se fait principalement par les reins (voie urinaire)."},
+        {type:"qcm", q:"[Élimination] La 4ème étape de la pharmacocinétique s'effectue principalement dans les reins :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"L'élimination (excrétion) est surtout rénale."},
+        {type:"qcm", q:"[Élimination] Les autres voies d'élimination sont :", options:[{k:"a",t:"La sueur"},{k:"b",t:"Les lames (ongles)"},{k:"c",t:"Le lait maternel"},{k:"d",t:"Les cheveux"}], correct:["a","b","c","d"], explain:"En dehors des reins : sueur, ongles, lait maternel, cheveux, bile, poumons."},
+        {type:"qcm", q:"[Élimination] Le « cycle entéro-hépatique » signifie : réabsorption du M au niveau de l'intestin grêle, excrétion dans la bile et élimination dans les matières fécales :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Le cycle entéro-hépatique recycle une partie du médicament (bile ↔ intestin)."},
+        {type:"qcm", q:"[Élimination] Un médicament qui subit un cycle entéro-hépatique voit sa durée d'action augmentée :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Le recyclage prolonge la présence du PA dans l'organisme."},
+        {type:"qcm", q:"[Élimination] Les métabolites excrétés dans la bile rejoignent les selles :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"La bile se déverse dans l'intestin : les métabolites sont éliminés dans les selles."},
+        {type:"qcm", q:"[Élimination] L'élimination rénale d'un médicament (ou de ses métabolites) :", options:[{k:"a",t:"Est facilitée par l'hydrosolubilité des métabolites"},{k:"b",t:"Est facilitée par la liposolubilité des métabolites"}], correct:["a"], explain:"Les molécules hydrosolubles sont plus facilement éliminées dans l'urine."},
+        {type:"qcm", q:"[Élimination] Le temps de demi-vie est le temps nécessaire pour que la concentration sanguine diminue de :", options:[{k:"a",t:"20 %"},{k:"b",t:"50 %"},{k:"c",t:"40 %"}], correct:["b"], explain:"La demi-vie = temps pour que la concentration diminue de moitié (50 %)."},
+        {type:"qcm", q:"[Élimination] Combien de demi-vies sont nécessaires pour atteindre l'équilibre des concentrations sanguines ?", options:[{k:"a",t:"4 demi-vies"},{k:"b",t:"5 à 7 demi-vies"},{k:"c",t:"3 demi-vies"}], correct:["b"], explain:"Il faut environ 5 à 7 demi-vies pour atteindre l'état d'équilibre (plateau)."},
+        {type:"qcm", q:"[Élimination] Indiquez un paramètre de la phase d'élimination :", options:[{k:"a",t:"Le % de fixation aux protéines"},{k:"b",t:"La Cmax"},{k:"c",t:"Le temps de demi-vie"}], correct:["c"], explain:"Le temps de demi-vie caractérise l'élimination. Cmax = absorption ; fixation = distribution."},
+        {type:"qcm", q:"[Élimination] La détermination du temps de demi-vie permet de fixer le rythme d'administration :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"La demi-vie détermine l'intervalle entre deux prises."},
+        {type:"qcm", q:"[Élimination] Quelle(s) affirmation(s) est(sont) exacte(s) ?", options:[{k:"a",t:"Chez l'insuffisant hépatique, il est recommandé de diminuer les posologies"},{k:"b",t:"Chez la personne âgée, un espacement des prises n'est jamais nécessaire"},{k:"c",t:"Chez l'insuffisant rénal, le principe actif s'accumule par défaut d'élimination"}], correct:["a","c"], explain:"On adapte les doses en cas d'insuffisance hépatique ou rénale (risque d'accumulation)."},
+        {type:"qcm", q:"[Pharmacodynamie] La pharmacodynamie correspond à :", options:[{k:"a",t:"L'étude du devenir du médicament dans l'organisme"},{k:"b",t:"L'étude des effets du médicament sur l'organisme et de ses sites d'action"},{k:"c",t:"L'étude de l'absorption digestive des médicaments"}], correct:["b"], explain:"Pharmacodynamie = effet du médicament sur l'organisme (l'inverse de la pharmacocinétique)."},
+        {type:"qcm", q:"[Pharmacodynamie] Un médicament agit principalement en :", options:[{k:"a",t:"Modifiant la structure de l'ADN"},{k:"b",t:"Se fixant sur des récepteurs cellulaires"},{k:"c",t:"Agissant par ses propriétés physiques"}], correct:["b"], explain:"La plupart des médicaments agissent en se fixant sur des récepteurs."},
+        {type:"qcm", q:"[Pharmacodynamie] Une famille pharmacologique regroupe les médicaments qui provoquent les mêmes effets pharmacodynamiques :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Une même famille = même mécanisme / mêmes effets."},
+        {type:"qcm", q:"[Pharmacodynamie] Un effet indésirable est :", options:[{k:"a",t:"Toujours imprévisible"},{k:"b",t:"Un effet non souhaité du médicament"},{k:"c",t:"Un signe d'efficacité du traitement"}], correct:["b"], explain:"Un effet indésirable est un effet non recherché ; il peut être prévisible."},
+        {type:"qcm", q:"[Pharmacodynamie] Un récepteur est :", options:[{k:"a",t:"Une protéine sur laquelle le médicament se fixe pour déclencher une cascade de réactions (effet thérapeutique)"},{k:"b",t:"Présent sur les membranes, dans le cytoplasme ou le noyau d'une cellule"},{k:"c",t:"Une enzyme digestive"}], correct:["a","b"], explain:"Le récepteur est une protéine, membranaire ou intracellulaire, cible du médicament."},
+        {type:"qcm", q:"[Pharmacodynamie] Les principaux sites de fixation des médicaments sont :", options:[{k:"a",t:"Les récepteurs"},{k:"b",t:"Les enzymes"},{k:"c",t:"Les canaux ioniques"},{k:"d",t:"Les pompes à protons H+"}], correct:["a"], explain:"Le récepteur est le principal site de fixation (les autres existent mais sont secondaires ici)."},
+        {type:"qcm", q:"[Pharmacodynamie] Le passage d'une molécule à travers une membrane cellulaire dépend de la taille de la molécule :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Plus une molécule est petite, plus elle traverse facilement les membranes."},
+        {type:"qcm", q:"[Pharmacodynamie] Un médicament AGONISTE est une substance qui :", options:[{k:"a",t:"Se fixe sur un récepteur et le bloque"},{k:"b",t:"Se fixe sur le récepteur et l'active"},{k:"c",t:"Détruit un récepteur"}], correct:["b"], explain:"L'agoniste active le récepteur (comme la substance naturelle)."},
+        {type:"qcm", q:"[Pharmacodynamie] Un médicament AGONISTE TOTAL :", options:[{k:"a",t:"Se fixe sur le récepteur et le stimule"},{k:"b",t:"Se fixe sur le récepteur et le bloque"},{k:"c",t:"Reproduit ce que fait la substance endogène et provoque la même réaction physiologique"}], correct:["a","c"], explain:"L'agoniste total mime totalement la substance endogène."},
+        {type:"qcm", q:"[Pharmacodynamie] Un médicament ANTAGONISTE est une substance qui :", options:[{k:"a",t:"Se fixe sur un récepteur et le bloque"},{k:"b",t:"Se fixe sur le récepteur et l'active"},{k:"c",t:"Ne déclenche pas de réaction cellulaire après s'être fixé sur le récepteur"}], correct:["a","c"], explain:"L'antagoniste occupe le récepteur sans l'activer : il le bloque."},
+        {type:"qcm", q:"[Pharmacodynamie] Un médicament peut engendrer 1 ou plusieurs effets thérapeutiques en fonction de la dose administrée :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Selon la dose, un même médicament peut avoir des effets différents."},
+        {type:"qcm", q:"[Pharmacodynamie] La spécificité d'un médicament correspond à :", options:[{k:"a",t:"Sa capacité à se fixer sur 1 seul type de récepteur"},{k:"b",t:"Sa capacité à se fixer sur plusieurs types de récepteurs"},{k:"c",t:"Sa capacité à occuper tous les récepteurs"}], correct:["a"], explain:"Plus un médicament est spécifique, moins il a d'effets sur d'autres récepteurs (moins d'effets indésirables)."},
+        {type:"qcm", q:"[Pharmacodynamie] La liaison Médicament-Récepteur est une liaison :", options:[{k:"a",t:"Irréversible"},{k:"b",t:"Réversible"},{k:"c",t:"Saturable"}], correct:["b","c"], explain:"La liaison est généralement réversible et saturable (nombre limité de récepteurs)."},
+        {type:"qcm", q:"[Pharmacodynamie] La diffusion SIMPLE à travers une membrane :", options:[{k:"a",t:"Nécessite toujours un transporteur membranaire"},{k:"b",t:"Est un mécanisme de transport passif"},{k:"c",t:"Est un mécanisme de transport actif (avec dépense d'énergie)"}], correct:["b"], explain:"La diffusion simple est passive (sans énergie, dans le sens du gradient)."},
+        {type:"qcm", q:"[Pharmacodynamie] La diffusion d'un médicament de part et d'autre d'une membrane se fait dans le sens :", options:[{k:"a",t:"Du milieu le moins concentré vers le plus concentré"},{k:"b",t:"Du milieu le plus concentré vers le moins concentré"}], correct:["b"], explain:"Diffusion passive : du plus concentré vers le moins concentré."},
+        {type:"qcm", q:"[Pharmacodynamie] L'occupation totale des sites des récepteurs se nomme :", options:[{k:"a",t:"L'affinité des récepteurs"},{k:"b",t:"La saturation des récepteurs"}], correct:["b"], explain:"Quand tous les récepteurs sont occupés, on parle de saturation."},
+        {type:"qcm", q:"[Pharmacodynamie] La capacité d'un médicament à se lier à un récepteur se nomme l'affinité :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"L'affinité = capacité du médicament à se lier à son récepteur."},
+        {type:"qcm", q:"[Pharmacodynamie] Toute substance qui se lie à un récepteur s'appelle un ligand :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Un ligand est toute molécule qui se fixe sur un récepteur."},
+        {type:"qcm", q:"[Pharmacodynamie] Un ligand peut être agoniste ou antagoniste :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["a"], explain:"Un ligand active (agoniste) ou bloque (antagoniste) le récepteur."},
+        {type:"qcm", q:"[Pharmacodynamie] En thérapeutique, on peut associer un agoniste et un antagoniste :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["b"], explain:"Les associer serait contre-productif : l'antagoniste bloquerait l'effet de l'agoniste."},
+        {type:"qcm", q:"[Pharmacodynamie] Un antidote agit contre une intoxication médicamenteuse en se fixant sur les récepteurs et en les :", options:[{k:"a",t:"Stimulant"},{k:"b",t:"Bloquant"}], correct:["b"], explain:"L'antidote bloque les récepteurs pour contrer l'effet du toxique (souvent un antagoniste)."},
+        {type:"qcm", q:"[Pharmacodynamie] Tous les médicaments mis sur le marché ont un antidote :", options:[{k:"a",t:"Vrai"},{k:"b",t:"Faux"}], correct:["b"], explain:"Seuls certains médicaments disposent d'un antidote spécifique."}
+      ]
+    }
+  ]
+};
+
+</script>
+<script>
+/* ============ Icônes intégrées (pour PWA installable) ============ */
+const ICON192="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAACuUlEQVR42u3cwQmEQBQFwcnSMAzFOL0LHhVTkFVku4RO4M2vq2N87JuX6dD/NnyOXWEUHlw5DB5WSQweUUkIHk1ZCB5KSQQeR1kIHkRZBB5CSQTGVxaCwZVFYGhlERhYWQSGVRqBUZUFYFBlERhSWQQGVBqB8ZQFYDhlERhMaQTGUhaAoZRGYCRlARhIaQTGEQBSEYBhlEZgFAEgFQEYRGkExhAAEgASAFIHgCGURmAEAaCftW/ro9kYAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQAAAIAAAEAAAAGAEAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAQAAAIAAAEAgAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALxzSHo3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAASAH2P5MZYAAEAAACAAABAAAAgAAAQAAAIAAACMAAAAAgAAAQCAAABAAAAgAAAQAAAIAAAEAAACAAABAIAAAEAAACAAABAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAACAAABAAEgDSXQDXZwhljx8AAWAMASABIPUAQKD08QMgAIyiMgAIlD5+AASAcVQGAIHSxw+A8gAgUPr4AVAeAARKHz8Eyh8/AMoDgEDp44dA+eOHQPnjB0B5ABAoffwQKH/8ECh//BAof/wgKH/4EMjxQyDHD4IcPgRy/CDI4YMghw+DHD0McvRQ6MvHfgLFD65Dq2e1eAAAAABJRU5ErkJggg==";
+const ICON512="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAALpUlEQVR42u3WwQ3CQBAEQWdJGIRCnP4j8QScAb87tmulSuCMmD4Ot+XdH7c3wAT+0Z0z8AACwRl7AESBM/gACAJn8AEQBM7oAyAGnNEHQAw4ow+AGHCGHwAh4Iw+AGLAGX4AIeAMPwBCwBl+AISAM/wACAFn+AEQAs74AyACnOEHQAg4ww+AEHDGHwAR4Aw/AELAGX8ARIAz/AAIAWf8ARABxt+PDQARYPwBQAQYfgAQAsYfAESA8QcAEWD8AUAEGH8AEAHGHwBEgPEHABFg+AFACBh/ABABAgAABIDxBwARYPwBIBgBPjgAxCLAhwaAWAT4wAAQiwAfFgBiEeCDAkAwAnxMAIgFgA8JALEI8AEBIBYBPhwAxCLABwOAYAT4WAAQCwAfCgBiEeADAUAwAnwcAIgFgA8DALEI8EEAIBgBPgYAxALAhwCAYAT4CAAQCwAfAABiEeDhASAYAR4dAGIB4MEBIBgBHhsAYgHgoQEgGAEeGQBiAeCBASAYAR4XAGIB4GEBIBgBHhUAYgHgQQEgGAEeEwAEAAAwPQA8JAAEI8AjAkAsADwgAAQjwOMBgAAAAKYHgIcDgGAEeDQAEAAAwPQA8GAAEIwAjwUAAgAAmB4AHgoAghHgkQBAAAAAAgAAGBcAHggAghHgcQBAAAAAAgAAGBcAHgYAghHgUQBAAAAAAgAAEAAAwP8HgAcBgGAEeAwAEAAAgAAAAAQAACAAAAABAAAIAABgywDwELDG63ny5bcAiyLAI4AAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEAAgAIy/AAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAxl8AgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAEAAAAJAAIAAAASAAAABAAgAAQACABAAAgAEACAABAAIAEAACAAQAIAAEAAgAAABIABAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAQAAIAL8FEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACAASAhwABIABAAAACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIABAAOC3AAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAIAA8AggAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQACADjLwBAAIAAEACAAAABIAAAAQACQAAAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgPEXACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAIwDgMgTAAgAAAEgABAAAAJAACAAAASAAEAAAAgAAYAAABAAAgABACAABAACABAACAAEACAAEAAIAEAAIAAQAIAAQAAIAAABgAAQAAACAAEgAAAEAAJAAAAIAASAAAAQAAgAAQAgABAAAgBAAAgABACAABAACAAAASAAEAAAAkAAIAAABIAAQAAACAABgAAAEAACAAEACAAEAAIAEAAIAAQAIAAQAAgAQAAgAAQAgABAAAgAAAGAABAAAAIAASAAAAQAAkAAAAgABIAAABAACAABACAABICHEAAAAkAAIAAABIAAQAAACAABgAAAEAACAAEAIAAEAAIAQAAIAAQAIAD8pwsABAAgABAACABAACAAEACAAEAACAAAAYAAEAAAAgABIAAABAACQAAACAAEgAAAEAAIAAEAIAAQAAIAQAAIAI8gAAAEgABAAAAIAAGAAAAQAAIAAQAgAAQAAgBAAAgABACAABAACAAAASAAEACAAEAAIAAAAYAAQAAAAgABgD8NQAAgAAQAgABAAAgAAAGAABAAAAIAAQAizzgAAgAEgAAABAAIAAEACAAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEACAABAAIAMP4CAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQACABAAAgAEACAABAAIAEAACAAQAIAAEAAgAAABIABAAAACQACAAAAEgAAAAQAIAAEAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAASAAAABAAJAAPgtgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEACAAQAAIAEAAgAAQACAAPAQIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAABIAAAAEAAgC/BRAAIAAEACAAQAAIAEAAgAAQAIAAAAEgAAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAEgEcAASAAQAAAAkAAgAAABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAQAAYfwEAAgAEgAAABAAIAAEACAAQAAIAEAAgAAQAIABAAAgAQACAABAAgAAAASAAAAEAAkAAAAIABIAAAAEACAABAAIAEAACAAQAIAAEAAgAQAAIABAAgAAQACAAAAEgAEAAAAJAAIAAAIy/AAABAAJAAAACAASAAAAEAAgAAQAIABAAAgAQACAABAAgAEAACABAAIAAEACAAAABIAAAAQACQACAAAAEgAAAAQAIAAEAAgAQAAIABAAgAAQACABAAAgAEACAABAAIAAAASAAQAAAAkAAgAAAASAAAAEAAkAAAAIABIAAAAQACAABAAgAEAACABAAIAAEAPBjAFznIQAgNv4CAAAEAAAgAAAAAQAACAAAQAAAAAIAANg6AEQAAATHXwAAgAAAAAQAACAAAIA5ASACACA4/gIAAAQAACAAAICxASACACA4/gIAAAQAACAAAICxASACACA4/gIAAAQAAFAJABEAAMHxFwAAIAAAgEoAiAAACI6/AAAAAQAAVAJABABAcPwFAABEA0AEAEBw/AUAAAgAAKASACIAAILjLwAAIBoAIgAAguMvAAAgGgAiAACC4y8AACAaACIAAILjLwAAIBoAIgAAguMvAAAgGgAiAACC4y8CACA6/gIAAKIBIAIAIDj+AgAAogEgAgAgOP4iAACi4y8AACAaACIAAILjLwIAIDr+AgAAogEgAgAgOP4iAACi4y8CACA6/iIAAKLjLwAAIBoAIgAAguMvAgAgOv4iAACi4y8CACA6/iIAAKLjLwIAIDr+IgAA4y8AAEAAiAAAMP5CAAAMvwgAAOMvAgDA+IsAADD+IgAAjL8IAADjLwIAwPgLAQAw/CIAAIy/CAAA4y8CAMD4CwEADL8TAQAYfycEADD8TgQAYPydEADA8DshAIDhdyIAAOPvhAAAht8JAQAMvxMCABh+JwQAMPxOCAAYfufEAIDRd04IABh+58QAgNF3TgwAGH3nxACA0XdOEAAYfOcEAYDBd04UABh75wQCYODd6vsAoqS7NH6Dg+4AAAAASUVORK5CYII=";
+
+/* ============ État & stockage ============ */
+const LS_STATS = "qcm_bloc3_stats_v1";
+const LS_SESS  = "qcm_bloc3_sessions_v1";
+const EXAM_SECONDS = 30;
+function loadJSON(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v))}
+let stats = loadJSON(LS_STATS,{});
+let sessions = loadJSON(LS_SESS,[]);
+
+const app = document.getElementById('app');
+const homeBtn = document.getElementById('homeBtn');
+const subtitle = document.getElementById('subtitle');
+
+let session = null;   // {list, pos, answers, scope, mode, tStart}
+let timer = {id:null, remaining:0, qStart:0};
+
+/* ============ Utilitaires ============ */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function nl2br(s){return s.replace(/\n/g,'<br>')}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1700)}
+function totalQuestions(){return QCM_DATA.themes.reduce((n,t)=>n+t.questions.length,0)}
+function themeById(id){return QCM_DATA.themes.find(t=>t.id===id)}
+function qStat(tid,idx){return (stats[tid]||{})[idx]||null}
+function errorPool(){
+  let p=[];
+  QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>{
+    const s=qStat(t.id,i); if(s&&s.seen&&s.lastCorrect===false)p.push({tid:t.id,idx:i,q});
+  }));
+  return p;
+}
+function masteredCount(){
+  let m=0; QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>{const s=qStat(t.id,i);if(s&&s.seen&&s.lastCorrect)m++;}));
+  return m;
+}
+function recordAnswer(tid,idx,isCorrect){
+  if(!stats[tid])stats[tid]={};
+  const cur=stats[tid][idx]||{seen:0,correct:0};
+  cur.seen=(cur.seen||0)+1;
+  if(isCorrect)cur.correct=(cur.correct||0)+1;
+  cur.lastCorrect=isCorrect;
+  stats[tid][idx]=cur; saveJSON(LS_STATS,stats);
+}
+function themeStats(tid){
+  const t=themeById(tid); let seen=0,correct=0;
+  Object.values(stats[tid]||{}).forEach(o=>{if(o.seen){seen++;if(o.lastCorrect)correct++}});
+  return {answered:seen,correct,total:t.questions.length};
+}
+
+/* ============ Accueil ============ */
+function goHome(){
+  stopTimer(); session=null;
+  homeBtn.classList.remove('show');
+  subtitle.textContent="Délégué Pharmaceutique · Bloc 3";
+  window.scrollTo(0,0);
+  const errN=errorPool().length;
+  const g = QCM_DATA.themes.map(t=>{
+    const st=themeStats(t.id);
+    const pct=st.total?Math.round(st.answered/st.total*100):0;
+    return `<button class="theme" onclick="openConfig('${t.id}')">
+      <div class="ico">${t.icon}</div><div class="nm">${t.name}</div>
+      <div class="ct">${t.questions.length} questions${st.answered?` · ${Math.round(st.correct/Math.max(st.answered,1)*100)}%`:''}</div>
+      <div class="bar"><i style="width:${pct}%"></i></div></button>`;
+  }).join('');
+  app.innerHTML = `
+    <div class="big-actions">
+      <div class="card-action primary" onclick="openConfig('ALL')">
+        <div class="ico">&#127775;</div><div><b>Toutes les questions</b><span>Les ${totalQuestions()} questions mélangées</span></div>
+      </div>
+      <div class="card-action warn ${errN?'':'disabled'}" onclick="${errN?"openConfig('ERRORS')":"toast('Aucune erreur à revoir pour l\\'instant')"}">
+        <div class="ico">&#128260;</div><div><b>Mes erreurs</b><span>Rejouer mes questions ratées</span></div>${errN?`<div class="badge">${errN}</div>`:''}
+      </div>
+      <div class="card-action" onclick="showAnalyse()">
+        <div class="ico">&#128202;</div><div><b>Mon analyse</b><span>Progrès & statistiques</span></div>
+      </div>
+    </div>
+    <h2 class="section">Choisir un thème</h2>
+    <div class="grid">${g}</div>
+    <p class="hint" style="text-align:center;margin-top:22px">
+      ${QCM_DATA.themes.length} thèmes &middot; ${totalQuestions()} questions au total<br>
+      Ordre aléatoire à chaque session &middot; Progression enregistrée sur cet appareil</p>`;
+}
+
+/* ============ Configuration ============ */
+let cfg={scope:'ALL', len:'20', mode:'learn'};
+function scopeName(scope){
+  if(scope==='ALL')return 'Toutes les questions';
+  if(scope==='ERRORS')return 'Mes erreurs';
+  return themeById(scope).name;
+}
+function openConfig(scope){
+  stopTimer();
+  cfg.scope=scope; cfg.mode='learn';
+  homeBtn.classList.add('show');
+  let max;
+  if(scope==='ALL')max=totalQuestions();
+  else if(scope==='ERRORS')max=errorPool().length;
+  else max=themeById(scope).questions.length;
+  subtitle.textContent=scopeName(scope);
+  window.scrollTo(0,0);
+  const title = scope==='ALL'?'&#127775; Toutes les questions'
+    : scope==='ERRORS'?'&#128260; Mes erreurs'
+    : themeById(scope).icon+' '+themeById(scope).name;
+  let lens=[10,20,30].filter(n=>n<max); lens.push(max);
+  cfg.len=String(Math.min(20,max));
+  app.innerHTML=`
+    <div class="panel">
+      <h3>${title}</h3>
+      <div class="desc">${scope==='ERRORS'?`${max} question(s) à revoir. `:''}Session en ordre aléatoire.</div>
+      <div class="flabel">Mode</div>
+      <div class="moderow" id="moderow">
+        <div class="modecard on" data-mode="learn" onclick="pickMode('learn')">
+          <div class="mt">&#128218; Apprentissage</div><div class="md">Correction et explication après chaque question. Sans limite de temps.</div>
+        </div>
+        <div class="modecard" data-mode="exam" onclick="pickMode('exam')">
+          <div class="mt">&#9201;&#65039; Examen chrono</div><div class="md">${EXAM_SECONDS}s par question, minuteur affiché. Correction à la fin.</div>
+        </div>
+      </div>
+      <div class="flabel">Nombre de questions</div>
+      <div class="lenrow" id="lenrow">
+        ${lens.map(n=>`<button class="chip ${String(n)===cfg.len?'on':''}" data-len="${n}" onclick="pickLen(${n})">${n===max?'Toutes ('+n+')':n}</button>`).join('')}
+      </div>
+      <button class="btn primary" onclick="startSession()">Commencer &#9654;</button>
+    </div>`;
+}
+function pickLen(n){cfg.len=String(n);document.querySelectorAll('#lenrow .chip').forEach(c=>c.classList.toggle('on',c.dataset.len===cfg.len))}
+function pickMode(m){cfg.mode=m;document.querySelectorAll('#moderow .modecard').forEach(c=>c.classList.toggle('on',c.dataset.mode===m))}
+
+function buildPool(){
+  if(cfg.scope==='ALL'){let p=[];QCM_DATA.themes.forEach(t=>t.questions.forEach((q,i)=>p.push({tid:t.id,idx:i,q})));return p;}
+  if(cfg.scope==='ERRORS')return errorPool();
+  return themeById(cfg.scope).questions.map((q,i)=>({tid:cfg.scope,idx:i,q}));
+}
+function startSession(){
+  const pool=shuffle(buildPool());
+  const len=parseInt(cfg.len,10);
+  session={list:pool.slice(0,len), pos:0, answers:[], scope:cfg.scope, mode:cfg.mode, tStart:Date.now(), timeSpent:0};
+  renderQuestion();
+}
+
+/* ============ Minuteur (mode examen) ============ */
+function stopTimer(){if(timer.id){clearInterval(timer.id);timer.id=null;}}
+function startTimer(){
+  stopTimer();
+  timer.remaining=EXAM_SECONDS; timer.qStart=Date.now();
+  updateTimerUI();
+  timer.id=setInterval(()=>{
+    timer.remaining--;
+    updateTimerUI();
+    if(timer.remaining<=0){stopTimer();autoAdvance();}
+  },1000);
+}
+function updateTimerUI(){
+  const el=document.getElementById('timer'), bar=document.getElementById('timerbarfill');
+  if(!el)return;
+  el.textContent='⏱️ '+timer.remaining+'s';
+  const r=timer.remaining;
+  el.className='timer'+(r<=5?' danger':r<=10?' warn':'');
+  if(bar){bar.style.width=(r/EXAM_SECONDS*100)+'%';bar.className=(r<=5?'danger':r<=10?'warn':'');}
+}
+function autoAdvance(){
+  const it=session.list[session.pos], q=it.q;
+  if(q.type==='qcm'){
+    const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+    lockExamQCM(it,sel);
+  } else {
+    const txt=(document.getElementById('qrocInput')||{}).value||'';
+    session.answers.push({item:it,isCorrect:null,userText:txt});
+  }
+  goNextExam();
+}
+
+/* ============ Affichage question ============ */
+function renderQuestion(){
+  stopTimer();
+  window.scrollTo(0,0);
+  homeBtn.classList.add('show');
+  const {list,pos,mode}=session;
+  const it=list[pos], q=it.q, theme=themeById(it.tid);
+  const prog=Math.round(pos/list.length*100);
+  const exam = mode==='exam';
+  let body = q.type==='qcm'
+    ? `<div class="opts" id="opts">`+q.options.map(o=>`
+        <div class="opt" data-k="${o.k}" onclick="toggleOpt(this)"><div class="box"></div>
+        <div class="lbl"><span class="key">${o.k})</span> ${nl2br(esc(o.t))}</div></div>`).join('')+`</div>`
+    : `<textarea class="qroc" id="qrocInput" placeholder="Écris ta réponse ici (facultatif)..."></textarea>`;
+  const timerHTML = exam
+    ? `<div class="timer" id="timer">⏱️ ${EXAM_SECONDS}s</div>`
+    : '';
+  const timerBar = exam ? `<div class="timerbar"><i id="timerbarfill"></i></div>` : '';
+  let footerBtn;
+  if(exam){
+    footerBtn = q.type==='qcm'
+      ? `<button class="btn warnb" onclick="examValidate()">Valider &amp; suivant &#8594;</button>`
+      : `<button class="btn warnb" onclick="examSkipQroc()">Suivant &#8594;</button>`;
+  } else {
+    footerBtn = `<button class="btn primary" id="validateBtn" onclick="validate()">${q.type==='qcm'?'Valider':'Afficher la réponse'}</button>`;
+  }
+  app.innerHTML=`
+    <div class="quiztop">
+      <div class="progress"><i style="width:${prog}%"></i></div>
+      ${timerHTML}
+      <div class="qcount">${pos+1} / ${list.length}</div>
+    </div>
+    ${timerBar}
+    <div class="qtheme">${theme.icon} ${theme.name}<span class="qtype ${q.type}">${q.type==='qcm'?'QCM':'QROC'}</span></div>
+    <div class="qtext">${esc(q.q)}</div>
+    <div class="hint">${exam?(q.type==='qcm'?'Coche ta réponse avant la fin du temps.':'Réponds mentalement, la correction viendra à la fin.'):(q.type==='qcm'?'Coche la ou les réponses, puis valide.':'Réponds puis affiche la correction.')}</div>
+    ${body}
+    <div id="fbZone"></div>
+    <div class="footer-bar" id="footer">${footerBtn}</div>`;
+  if(exam)startTimer();
+}
+function toggleOpt(el){
+  if(el.classList.contains('disabled'))return;
+  el.classList.toggle('sel');
+  el.querySelector('.box').textContent=el.classList.contains('sel')?'✓':'';
+}
+
+/* ============ Mode examen : validation ============ */
+function isQCMCorrect(q,sel){
+  const c=q.correct.slice().sort(), s=sel.slice().sort();
+  return c.length===s.length && c.every((v,i)=>v===s[i]);
+}
+function lockExamQCM(it,sel){
+  const ok=isQCMCorrect(it.q,sel);
+  recordAnswer(it.tid,it.idx,ok);
+  session.answers.push({item:it,isCorrect:ok,chosen:sel});
+}
+function examValidate(){
+  stopTimer();
+  const it=session.list[session.pos];
+  const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+  lockExamQCM(it,sel);
+  goNextExam();
+}
+function examSkipQroc(){
+  stopTimer();
+  const it=session.list[session.pos];
+  const txt=(document.getElementById('qrocInput')||{}).value||'';
+  session.answers.push({item:it,isCorrect:null,userText:txt});
+  goNextExam();
+}
+function goNextExam(){
+  session.pos++;
+  if(session.pos>=session.list.length)finishSession();
+  else renderQuestion();
+}
+
+/* ============ Mode apprentissage : validation ============ */
+function validate(){
+  const it=session.list[session.pos], q=it.q;
+  if(q.type==='qcm'){
+    const sel=[...document.querySelectorAll('#opts .opt.sel')].map(e=>e.dataset.k);
+    const ok=isQCMCorrect(q,sel);
+    document.querySelectorAll('#opts .opt').forEach(el=>{
+      el.classList.add('disabled');
+      const k=el.dataset.k, good=q.correct.includes(k), picked=sel.includes(k);
+      const box=el.querySelector('.box'); el.classList.remove('sel');
+      if(good){el.classList.add('correct');box.textContent='✓';el.insertAdjacentHTML('beforeend','<span class="tag">Bonne réponse</span>');}
+      else if(picked){el.classList.add('wrong');box.textContent='✗';el.insertAdjacentHTML('beforeend','<span class="tag">Votre choix</span>');}
+    });
+    recordAnswer(it.tid,it.idx,ok);
+    session.answers.push({item:it,isCorrect:ok});
+    const goodTxt=q.correct.map(k=>k.toUpperCase()).join(', ');
+    document.getElementById('fbZone').innerHTML=`
+      <div class="feedback ${ok?'good':'bad'}">
+        <div class="ftitle">${ok?'&#10004; Correct !':'&#10008; Réponse incorrecte'}</div>
+        ${ok?'':`<div class="ans">Bonne(s) réponse(s) : <b>${goodTxt}</b></div>`}
+        <div class="exp">${esc(q.explain)}</div></div>`;
+    document.getElementById('footer').innerHTML=nextBtnHTML();
+    document.getElementById('fbZone').scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    document.getElementById('footer').remove();
+    document.getElementById('fbZone').innerHTML=`
+      <div class="feedback neutral">
+        <div class="ftitle">&#128172; Réponse attendue</div>
+        <div class="ans"><b>${esc(q.answer)}</b></div>
+        <div class="exp">${esc(q.explain)}</div></div>
+      <div class="selfassess">
+        <button class="btn ok" onclick="qrocSelf(true)">&#10004; Je savais</button>
+        <button class="btn ghost" onclick="qrocSelf(false)">&#10008; Je ne savais pas</button>
+      </div>`;
+  }
+}
+function qrocSelf(known){
+  const it=session.list[session.pos];
+  recordAnswer(it.tid,it.idx,known);
+  session.answers.push({item:it,isCorrect:known});
+  const sa=document.querySelector('.selfassess');
+  const html=`<div class="footer-bar">${nextBtnHTML()}</div>`;
+  if(sa)sa.outerHTML=html; else app.insertAdjacentHTML('beforeend',html);
+  window.scrollTo(0,document.body.scrollHeight);
+}
+function nextBtnHTML(){
+  const last=session.pos>=session.list.length-1;
+  return `<button class="btn primary" onclick="nextQuestion()">${last?'Voir mes résultats &#127942;':'Question suivante &#8594;'}</button>`;
+}
+function nextQuestion(){
+  session.pos++;
+  if(session.pos>=session.list.length)finishSession();
+  else renderQuestion();
+}
+
+/* ============ Résultats ============ */
+function finishSession(){
+  stopTimer();
+  session.timeSpent=Math.round((Date.now()-session.tStart)/1000);
+  window.scrollTo(0,0);
+  renderResults();
+  // enregistrer la session (basée sur ce qui est déjà noté)
+  const graded=session.answers.filter(a=>a.isCorrect!==null);
+  const correct=graded.filter(a=>a.isCorrect).length;
+  session._sessionIndex=sessions.length;
+  sessions.push({date:Date.now(),scope:session.scope,mode:session.mode,total:graded.length,correct,timeSpent:session.timeSpent});
+  saveJSON(LS_SESS,sessions);
+}
+function renderResults(){
+  const ans=session.answers;
+  const graded=ans.filter(a=>a.isCorrect!==null);
+  const correct=graded.filter(a=>a.isCorrect).length;
+  const pct=graded.length?Math.round(correct/graded.length*100):0;
+  const pendingQroc=ans.filter(a=>a.isCorrect===null).length;
+  const color=pct>=80?'var(--ok)':pct>=50?'var(--accent)':'var(--ko)';
+  const msg=graded.length===0?'Auto-évalue tes QROC ↓':pct>=80?'Excellent ! &#127881;':pct>=50?'Bien, continue ! &#128170;':'À retravailler &#128218;';
+  const examExtra = session.mode==='exam'
+    ? `<div class="desc" style="margin:6px 0 0">&#9201;&#65039; ${session.timeSpent}s au total · ${Math.round(session.timeSpent/Math.max(ans.length,1))}s/question en moyenne</div>` : '';
+  const review=ans.map((a,i)=>renderReviewItem(a,i)).join('');
+  app.innerHTML=`
+    <div class="panel">
+      <div class="scorebox">
+        <div class="scorecircle" id="scoreCircle" style="background:${color}">
+          <div class="pct" id="scorePct">${graded.length?pct+'%':'—'}</div>
+          <div class="frac" id="scoreFrac">${correct} / ${graded.length}${graded.length?'':' noté'}</div>
+        </div>
+        <h3 style="margin:4px 0" id="scoreMsg">${msg}</h3>
+        <div class="desc" style="margin-bottom:0">${scopeName(session.scope)} · ${session.mode==='exam'?'Mode examen':'Mode apprentissage'}</div>
+        ${examExtra}
+        ${pendingQroc?`<div class="desc" id="pendNote" style="margin-top:6px;color:var(--accent);font-weight:600">${pendingQroc} QROC à auto-évaluer ci-dessous</div>`:''}
+      </div>
+    </div>
+    <div class="footer-bar" style="position:static">
+      <div class="big-actions">
+        <button class="btn primary" onclick="openConfig('${session.scope}')">&#128260; Rejouer</button>
+        <button class="btn ghost" onclick="goHome()">&#127968; Accueil</button>
+      </div>
+    </div>
+    <h2 class="section">Correction détaillée</h2>
+    <div class="review">${review}</div>
+    <div class="footer-bar" style="position:static"><button class="btn ghost" onclick="showAnalyse()">Voir mon analyse globale &#128202;</button></div>`;
+}
+function renderReviewItem(a,i){
+  const q=a.item.q, th=themeById(a.item.tid);
+  const mk=a.isCorrect===null?'&#10067;':a.isCorrect?'&#9989;':'&#10060;';
+  let corr='';
+  if(q.type==='qcm'){
+    const goodTxt=q.correct.map(k=>k.toUpperCase()).join(', ');
+    corr=`<div class="rev-corr"><b>Bonne(s) réponse(s) : ${goodTxt}</b> — ${q.options.filter(o=>q.correct.includes(o.k)).map(o=>nl2br(esc(o.t))).join(' ; ')}<br><span style="color:var(--muted)">${esc(q.explain)}</span></div>`;
+  } else {
+    corr=`<div class="rev-corr"><b>Réponse : ${esc(q.answer)}</b><br><span style="color:var(--muted)">${esc(q.explain)}</span></div>`;
+    if(a.isCorrect===null){
+      corr+=`<div class="rev-self" id="self-${i}">
+        <button onclick="reviewSelf(${i},true)">&#10004; Je savais</button>
+        <button onclick="reviewSelf(${i},false)">&#10008; Je ne savais pas</button></div>`;
+    }
+  }
+  return `<div class="rev-item" id="rev-${i}">
+    <div class="rev-head"><div class="mk" id="mk-${i}">${mk}</div>
+    <div><div>${esc(q.q)}</div><div class="qx">${th.icon} ${th.name} · ${q.type.toUpperCase()}</div></div></div>
+    ${corr}</div>`;
+}
+function reviewSelf(i,known){
+  const a=session.answers[i];
+  if(a.isCorrect!==null)return;
+  a.isCorrect=known;
+  recordAnswer(a.item.tid,a.item.idx,known);
+  document.getElementById('mk-'+i).innerHTML=known?'&#9989;':'&#10060;';
+  const sd=document.getElementById('self-'+i);
+  if(sd){sd.querySelectorAll('button').forEach(b=>b.classList.remove('pk-ok','pk-ko'));
+    sd.children[known?0:1].classList.add(known?'pk-ok':'pk-ko');}
+  // maj score en direct
+  const graded=session.answers.filter(x=>x.isCorrect!==null);
+  const correct=graded.filter(x=>x.isCorrect).length;
+  const pct=graded.length?Math.round(correct/graded.length*100):0;
+  const color=pct>=80?'var(--ok)':pct>=50?'var(--accent)':'var(--ko)';
+  document.getElementById('scoreCircle').style.background=color;
+  document.getElementById('scorePct').textContent=pct+'%';
+  document.getElementById('scoreFrac').textContent=correct+' / '+graded.length;
+  const pend=session.answers.filter(x=>x.isCorrect===null).length;
+  const pn=document.getElementById('pendNote'); if(pn)pn.textContent=pend?pend+' QROC à auto-évaluer ci-dessous':'Toutes les questions sont évaluées ✔';
+  // maj session enregistrée
+  if(sessions[session._sessionIndex]){sessions[session._sessionIndex].total=graded.length;sessions[session._sessionIndex].correct=correct;saveJSON(LS_SESS,sessions);}
+}
+
+/* ============ Analyse ============ */
+function showAnalyse(){
+  stopTimer(); session=null;
+  window.scrollTo(0,0); homeBtn.classList.add('show');
+  subtitle.textContent="Mon analyse";
+  if(sessions.length===0){
+    app.innerHTML=`<div class="panel"><div class="empty">&#128202;<br><br>Aucune session terminée.<br>Lance un entraînement pour suivre tes progrès ici !</div></div>
+      <div class="footer-bar" style="position:static"><button class="btn primary" onclick="goHome()">Commencer &#9654;</button></div>`;
+    return;
+  }
+  let totSeen=0,totCorrect=0;const totQ=totalQuestions();
+  const rows=QCM_DATA.themes.map(t=>{
+    let seen=0,correct=0;
+    Object.values(stats[t.id]||{}).forEach(o=>{if(o.seen){seen++;if(o.lastCorrect)correct++}});
+    totSeen+=seen;totCorrect+=correct;
+    const cov=Math.round(seen/t.questions.length*100), succ=seen?Math.round(correct/seen*100):0;
+    const col=succ>=80?'var(--ok)':succ>=50?'var(--accent)':'var(--ko)';
+    return {t,seen,correct,cov,succ,col};
+  });
+  const globalSucc=totSeen?Math.round(totCorrect/totSeen*100):0;
+  const globalCov=Math.round(totSeen/totQ*100);
+  const mastered=masteredCount(), errs=errorPool();
+  const last=sessions.slice(-8);
+  const spark=last.map(s=>{
+    const p=s.total?Math.round(s.correct/s.total*100):0;
+    const col=p>=80?'var(--ok)':p>=50?'var(--accent)':'var(--ko)';
+    return `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px">
+      <div style="font-size:10px;color:var(--muted);font-weight:700">${p}%</div>
+      <div style="width:70%;height:${Math.max(p,4)}%;background:${col};border-radius:4px 4px 0 0" title="${s.mode==='exam'?'Examen':'Apprentissage'}"></div></div>`;
+  }).join('');
+  const themeRows=rows.map(r=>`
+    <div class="theme-stat"><div class="top"><span>${r.t.icon} ${r.t.name}</span>
+      <span class="pct" style="color:${r.seen?r.col:'var(--muted)'}">${r.seen?r.succ+'%':'—'}</span></div>
+      <div class="bar"><i style="width:${r.seen?r.succ:0}%;background:${r.col}"></i></div>
+      <div class="meta">${r.correct}/${r.seen} réussies · ${r.seen}/${r.t.questions.length} vues (${r.cov}% du thème)</div></div>`).join('');
+  const errList = errs.length
+    ? `<h2 class="section">Questions à revoir (${errs.length})</h2>
+       <div class="footer-bar" style="position:static;margin-top:0"><button class="btn warnb" onclick="openConfig('ERRORS')">&#128260; S'entraîner sur mes erreurs</button></div>
+       <div class="revlist">${errs.slice(0,25).map(e=>`<div class="revq">${esc(e.q.q)}<div class="rt">${themeById(e.tid).icon} ${themeById(e.tid).name}</div></div>`).join('')}
+       ${errs.length>25?`<div class="hint" style="text-align:center">…et ${errs.length-25} autres</div>`:''}</div>`
+    : `<h2 class="section">Questions à revoir</h2><div class="panel"><div class="empty">&#127881; Aucune erreur en attente. Beau travail !</div></div>`;
+  app.innerHTML=`
+    <div class="stat-row">
+      <div class="stat"><div class="v">${globalSucc}%</div><div class="l">Réussite globale</div></div>
+      <div class="stat"><div class="v">${globalCov}%</div><div class="l">Programme vu</div></div>
+      <div class="stat"><div class="v">${sessions.length}</div><div class="l">Sessions</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="v ok">${mastered}</div><div class="l">Questions maîtrisées</div></div>
+      <div class="stat"><div class="v ko">${errs.length}</div><div class="l">À revoir</div></div>
+      <div class="stat"><div class="v">${totSeen}/${totQ}</div><div class="l">Questions vues</div></div>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:15px;margin-bottom:12px">&#128200; Évolution (dernières sessions)</h3>
+      <div style="display:flex;gap:6px;align-items:flex-end;height:110px;border-bottom:1px solid var(--line);padding-bottom:2px">${spark}</div>
+    </div>
+    <h2 class="section">Réussite par thème</h2>
+    ${themeRows}
+    ${errList}
+    <div style="text-align:center"><button class="reset" onclick="resetStats()">&#128465; Réinitialiser mes statistiques</button></div>
+    <div class="footer-bar" style="position:static"><button class="btn primary" onclick="goHome()">&#127968; Retour à l'accueil</button></div>`;
+}
+function resetStats(){
+  if(confirm("Effacer toutes tes statistiques et ton historique ? Action irréversible.")){
+    stats={};sessions=[];saveJSON(LS_STATS,stats);saveJSON(LS_SESS,sessions);
+    toast("Statistiques réinitialisées");showAnalyse();
+  }
+}
+
+/* ============ PWA : installation ============ */
+let deferredPrompt=null;
+(function setupPWA(){
+  const al=document.createElement('link');al.rel='apple-touch-icon';al.href=ICON192;document.head.appendChild(al);
+  try{
+    const mf={name:"QCM Bloc 3 — Délégué Pharmaceutique",short_name:"QCM Bloc 3",start_url:location.href,scope:"./",
+      display:"standalone",background_color:"#f3efe4",theme_color:"#6f8f57",
+      icons:[{src:ICON192,sizes:"192x192",type:"image/png",purpose:"any"},
+             {src:ICON512,sizes:"512x512",type:"image/png",purpose:"any"},
+             {src:ICON512,sizes:"512x512",type:"image/png",purpose:"maskable"}]};
+    const blob=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
+    const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(blob);document.head.appendChild(ml);
+  }catch(e){}
+  if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+})();
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.add('show');});
+window.addEventListener('appinstalled',()=>{document.getElementById('installBtn').classList.remove('show');deferredPrompt=null;});
+function doInstall(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;document.getElementById('installBtn').classList.remove('show');});}
+  else{toast("Sur iPhone : Partager → « Sur l'écran d'accueil »");}
+}
+
+/* ============ Démarrage ============ */
+goHome();
+</script>
+</body>
+</html>
